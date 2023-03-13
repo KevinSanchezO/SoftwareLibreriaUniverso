@@ -1,6 +1,7 @@
 import tkinter as tk
 import customtkinter as ctk
 import os
+import ConexionBD as bd
 from PIL import Image
 
 class MyApp(tk.Tk):
@@ -40,10 +41,22 @@ class MyApp(tk.Tk):
         # Show the first frame
         self.show_frame(Frame1)
 
+    def verification(self,user,password):
+        if user.get() == "" or password.get()=="":
+            print("Por favor ingrese un usuario y su contraseña")
+        else:
+            bandera = bd.consultaLogin(user.get(),password.get())
+            if bandera == True:
+                frame = self.frames[Frame2]
+                frame.tkraise()
+            else:
+                print("Usuario no encontrado")
+            
     def show_frame(self, frame_class):
         frame = self.frames[frame_class]
         frame.tkraise()
-
+                
+        
 class Frame1(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
@@ -52,20 +65,25 @@ class Frame1(tk.Frame):
         label_username = tk.Label(self, text="Username", 
                         fg="white", bg="#252525").grid(row=0, 
                         column=0, padx=10, pady=10, sticky="w")
-        entry_username = tk.Entry(self, bg="white").grid(row=0, 
-                        column=1, padx=10, pady=10, sticky="e")
+        entry_username = tk.Entry(self, bg="white")
+        entry_username.grid(row=0, column=1, padx=10, pady=10, sticky="e")
         label_password = tk.Label(self, text="Password", 
                         fg="white", bg="#252525").grid(row=1, 
                         column=0, padx=10, pady=10, sticky="w")
-        entry_password = tk.Entry(self, show="*", bg="white").grid(row=1, 
-                        column=1, padx=10, pady=10, sticky="e")
+        
+        entry_password = tk.Entry(self, show="*", bg="white")
+        entry_password.grid(row=1, column=1, padx=10, pady=10, sticky="e")
         button_1 = tk.Button(self, text="Login", bg="white", fg="#252525", 
-                    command=lambda: controller.show_frame(Frame2)).grid(row=2,
-                    column=0, columnspan=2, padx=10, pady=10)
+                    command=lambda: controller.verification(entry_username,entry_password)).grid(row=2,
+                    column=0, columnspan=2, padx=10, pady=10)#controller.show_frame(Frame2)).grid(row=2,
+                    #column=0, columnspan=2, padx=10, pady=10)
+
+        
 
 class Frame2(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
+    
 
         # Add the menu buttons to this frame
         button1 = tk.Button(self, text="Option 1", bg="white", fg="#252525")
