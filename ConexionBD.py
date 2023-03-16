@@ -2,10 +2,15 @@ import pyodbc
 
 # Ejecución de consulta
 def consultaLogin(user,contrasenia):
-    server = 'LAPTOP-N9RBF9JA\KEVIN1'
+    '''server = 'LAPTOP-N9RBF9JA\KEVIN1'
     database = 'LibreriaUniverso'
     username = 'sa'
-    password = '12345sa'
+    password = '12345sa' '''
+    
+    server = 'DESKTOP-KN8EIG1'
+    database = 'LibreriaUniverso'
+    username = 'sa'
+    password = 'abc1234'
     conn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
     try:
             cursor = conn.cursor()
