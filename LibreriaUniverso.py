@@ -34,7 +34,7 @@ class MyApp(tk.Tk):
 
         # Create the frames
         self.frames = {}
-        for F in (LogIn, MainMenu, InventoryManagementMenu):
+        for F in (LogIn, MainMenu, InventoryManagementMenu, RegisterNewProduct):
             frame = F(self.container, self)
             self.frames[F] = frame
             frame.grid(row=1, column=0, sticky="nsew")
@@ -126,7 +126,8 @@ class InventoryManagementMenu(tk.Frame):
 
         # Add the menu buttons to this frame
         button1 = tk.Button(self, text="Registrar nuevo producto", 
-                            font=font_frame, bg="#1C66D6", fg="white")
+                            font=font_frame, bg="#1C66D6", fg="white",
+                            command=lambda: controller.show_frame(RegisterNewProduct))
         button2 = tk.Button(self, text="Ver inventario", 
                             font=font_frame, bg="#1C66D6", fg="white")
 
@@ -146,13 +147,74 @@ class InventoryManagementMenu(tk.Frame):
 class RegisterNewProduct(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
-        font_frame = font.Font(size=12)
 
-        label_product_name = tk.Label(self, text="Nombre de producto", font=font_frame,
-                        fg="white", bg="#252525").grid(row=0, 
-                        column=0, padx=10, pady=10, sticky="w")
-        self.entry_username = tk.Entry(self, bg="white", font=font_frame)
-        self.entry_username.grid(row=0, column=1, padx=10, pady=10, sticky="e")
+        font_title = font.Font(size=18, weight="bold")
+        font_subtitle = font.Font(size=14, weight="bold")
+        font_label = font.Font(size=12)
+
+        # Title
+        label_title = tk.Label(self, text="Registrar nuevo producto", font=font_title,
+                               fg="white", bg="#252525")
+        label_title.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="w")
+
+        # Subtitle
+        label_subtitle = tk.Label(self, text="Filtro de registro", font=font_subtitle,
+                                  fg="white", bg="#252525")
+        label_subtitle.grid(row=1, column=0, columnspan=2, padx=10, pady=5, sticky="w")
+
+        # Product Name Entry
+        label_product_name = tk.Label(self, text="Nombre de producto", font=font_label,
+                                      fg="white", bg="#252525")
+        label_product_name.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+        self.entry_product_name = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_name.grid(row=2, column=1, padx=10, pady=10, sticky="e")
+
+        # Product Code Entry
+        label_product_code = tk.Label(self, text="Código de producto", font=font_label,
+                                      fg="white", bg="#252525")
+        label_product_code.grid(row=3, column=0, padx=10, pady=10, sticky="w")
+        self.entry_product_code = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_code.grid(row=3, column=1, padx=10, pady=10, sticky="e")
+
+        # Initial Quantity Entry
+        label_initial_quantity = tk.Label(self, text="Cantidad inicial", font=font_label,
+                                           fg="white", bg="#252525")
+        label_initial_quantity.grid(row=4, column=0, padx=10, pady=10, sticky="w")
+        self.entry_initial_quantity = tk.Entry(self, bg="white", font=font_label)
+        self.entry_initial_quantity.grid(row=4, column=1, padx=10, pady=10, sticky="e")
+
+        # Initial Quantity Entry
+        label_initial_price = tk.Label(self, text="Precio por unidad", font=font_label,
+                                           fg="white", bg="#252525")
+        label_initial_price.grid(row=5, column=0, padx=10, pady=10, sticky="w")
+        self.entry_initial_price = tk.Entry(self, bg="white", font=font_label)
+        self.entry_initial_price.grid(row=5, column=1, padx=10, pady=10, sticky="e")
+
+        # Save Button
+        button_save = tk.Button(self, text="Guardar", font=font_label, bg="green", fg="white",
+                                command=self.save_product)
+        button_save.grid(row=6, column=0, padx=10, pady=10, sticky="w")
+
+        # Clean Button
+        button_clean = tk.Button(self, text="Limpiar", font=font_label, bg="gray", fg="white",
+                                 command=self.clean_entries)
+        button_clean.grid(row=6, column=1, padx=10, pady=10, sticky="e")
+
+        # Clean Button
+        button_clean = tk.Button(self, text="Volver", font=font_label, bg="#D61C1C", fg="white",
+                                 command=lambda: controller.show_frame(InventoryManagementMenu))
+        button_clean.grid(row=6, column=2, padx=10, pady=10, sticky="e")
+
+    def save_product(self):
+        # Implement code to save the product here
+        pass
+
+    def clean_entries(self):
+        self.entry_product_name.delete(0, tk.END)
+        self.entry_product_code.delete(0, tk.END)
+        self.entry_initial_price.delete(0, tk.END)
+        self.entry_initial_quantity.delete(0, tk.END)
+        pass
 
 if __name__ == "__main__":
     app = MyApp()
