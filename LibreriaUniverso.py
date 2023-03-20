@@ -42,11 +42,20 @@ class MyApp(tk.Tk):
         # Show the first frame
         self.show_frame(MainMenu)
 
+    def verificationRegisterProduct(self,name,code,date,marca,quantity,price):
+        if name.get() == "" or code.get()=="" or date.get()=="" or marca.get()=="" or quantity.get()=="" or price.get()=="":
+            print("Por favor ingrese los datos que se le solicitan")
+        else:
+            coneccion = bd.connect()
+            bandera = bd.consultaRegistrarProducto(coneccion,name.get(),code.get(),date.get(),marca.get(),quantity.get(),price.get())
+            
+
     def verification(self,user,password):
         if user.get() == "" or password.get()=="":
             print("Por favor ingrese un usuario y su contraseña")
         else:
-            bandera = bd.consultaLogin(user.get(),password.get())
+            coneccion = bd.connect()
+            bandera = bd.consultaLogin(coneccion,user.get(),password.get())
             if bandera == True:
                 frame = self.frames[MainMenu]
                 frame.tkraise()
@@ -176,34 +185,49 @@ class RegisterNewProduct(tk.Frame):
         self.entry_product_code = tk.Entry(self, bg="white", font=font_label)
         self.entry_product_code.grid(row=3, column=1, padx=10, pady=10, sticky="e")
 
+        # Date Entry
+        label_product_date = tk.Label(self, text="Fecha de Vencimiento", font=font_label,
+                                      fg="white", bg="#252525")
+        label_product_date.grid(row=4, column=0, padx=10, pady=10, sticky="w")
+        self.entry_product_date = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_date.grid(row=4, column=1, padx=10, pady=10, sticky="e")
+
+        # Marca Entry
+        label_product_marca = tk.Label(self, text="Marca", font=font_label,
+                                      fg="white", bg="#252525")
+        label_product_marca.grid(row=5, column=0, padx=10, pady=10, sticky="w")
+        self.entry_product_marca = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_marca.grid(row=5, column=1, padx=10, pady=10, sticky="e")
+
         # Initial Quantity Entry
         label_initial_quantity = tk.Label(self, text="Cantidad inicial", font=font_label,
                                            fg="white", bg="#252525")
-        label_initial_quantity.grid(row=4, column=0, padx=10, pady=10, sticky="w")
+        label_initial_quantity.grid(row=6, column=0, padx=10, pady=10, sticky="w")
         self.entry_initial_quantity = tk.Entry(self, bg="white", font=font_label)
-        self.entry_initial_quantity.grid(row=4, column=1, padx=10, pady=10, sticky="e")
+        self.entry_initial_quantity.grid(row=6, column=1, padx=10, pady=10, sticky="e")
 
         # Initial Quantity Entry
         label_initial_price = tk.Label(self, text="Precio por unidad", font=font_label,
                                            fg="white", bg="#252525")
-        label_initial_price.grid(row=5, column=0, padx=10, pady=10, sticky="w")
+        label_initial_price.grid(row=7, column=0, padx=10, pady=10, sticky="w")
         self.entry_initial_price = tk.Entry(self, bg="white", font=font_label)
-        self.entry_initial_price.grid(row=5, column=1, padx=10, pady=10, sticky="e")
+        self.entry_initial_price.grid(row=7, column=1, padx=10, pady=10, sticky="e")
 
         # Save Button
         button_save = tk.Button(self, text="Guardar", font=font_label, bg="green", fg="white",
-                                command=self.save_product)
-        button_save.grid(row=6, column=0, padx=10, pady=10, sticky="w")
+                                command=lambda:controller.verificationRegisterProduct(self.entry_product_name,self.entry_product_code,self.entry_product_date,self.entry_product_marca,
+                                                                                      self.entry_initial_quantity,self.entry_initial_price))
+        button_save.grid(row=8, column=0, padx=10, pady=10, sticky="w")
 
         # Clean Button
         button_clean = tk.Button(self, text="Limpiar", font=font_label, bg="gray", fg="white",
                                  command=self.clean_entries)
-        button_clean.grid(row=6, column=1, padx=10, pady=10, sticky="e")
+        button_clean.grid(row=8, column=1, padx=10, pady=10, sticky="e")
 
         # Clean Button
-        button_clean = tk.Button(self, text="Volver", font=font_label, bg="#D61C1C", fg="white",
+        button_volver = tk.Button(self, text="Volver", font=font_label, bg="#D61C1C", fg="white",
                                  command=lambda: controller.show_frame(InventoryManagementMenu))
-        button_clean.grid(row=6, column=2, padx=10, pady=10, sticky="e")
+        button_volver.grid(row=8, column=2, padx=10, pady=10, sticky="e")
 
     def save_product(self):
         # Implement code to save the product here
@@ -214,6 +238,8 @@ class RegisterNewProduct(tk.Frame):
         self.entry_product_code.delete(0, tk.END)
         self.entry_initial_price.delete(0, tk.END)
         self.entry_initial_quantity.delete(0, tk.END)
+        self.entry_product_date.delete(0, tk.END)
+        self.entry_product_marca.delete(0, tk.END)
         pass
 
 if __name__ == "__main__":
