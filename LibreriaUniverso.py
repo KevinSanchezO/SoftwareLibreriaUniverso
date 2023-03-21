@@ -1,5 +1,6 @@
 import tkinter as tk
 import customtkinter as ctk
+from tkinter import messagebox as MessageBox
 import os
 import ConexionBD as bd
 from PIL import Image
@@ -40,19 +41,20 @@ class MyApp(tk.Tk):
             frame.grid(row=1, column=0, sticky="nsew")
 
         # Show the first frame
-        self.show_frame(MainMenu)
+        self.show_frame(LogIn)
 
-    def verificationRegisterProduct(self,name,code,date,marca,quantity,price):
-        if name.get() == "" or code.get()=="" or date.get()=="" or marca.get()=="" or quantity.get()=="" or price.get()=="":
-            print("Por favor ingrese los datos que se le solicitan")
+    def verificationRegisterProduct(self,name,date,marca,quantity,price):
+        if name.get() == "" or date.get()=="" or marca.get()=="" or quantity.get()=="" or price.get()=="":
+            MessageBox.showinfo("Error!", "Por favor ingrese los datos que se le solicitan")
         else:
             coneccion = bd.connect()
-            bandera = bd.consultaRegistrarProducto(coneccion,name.get(),code.get(),date.get(),marca.get(),quantity.get(),price.get())
+            bandera = bd.consultaRegistrarProducto(coneccion,name.get(),date.get(),marca.get(),quantity.get(),price.get())
             
 
     def verification(self,user,password):
         if user.get() == "" or password.get()=="":
-            print("Por favor ingrese un usuario y su contraseña")
+            MessageBox.showinfo("Error!", "Por favor ingrese un usuario y su contraseña")
+            
         else:
             coneccion = bd.connect()
             bandera = bd.consultaLogin(coneccion,user.get(),password.get())
@@ -60,7 +62,7 @@ class MyApp(tk.Tk):
                 frame = self.frames[MainMenu]
                 frame.tkraise()
             else:
-                print("Usuario no encontrado")
+                MessageBox.showinfo("Error!", "El usuario ingresado es incorrecto o no existe")
             
     def show_frame(self, frame_class):
         frame = self.frames[frame_class]
@@ -71,7 +73,7 @@ class MyApp(tk.Tk):
 class LogIn(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
-
+        parent.config(width=200,height=200) 
         font_frame = font.Font(size=12)
 
         # Add the login widgets to this frame
@@ -99,7 +101,8 @@ class MainMenu(tk.Frame):
     
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
-    
+        
+        
         button_font = font.Font(size=12)
 
         # Add the menu buttons to this frame
@@ -178,12 +181,12 @@ class RegisterNewProduct(tk.Frame):
         self.entry_product_name = tk.Entry(self, bg="white", font=font_label)
         self.entry_product_name.grid(row=2, column=1, padx=10, pady=10, sticky="e")
 
-        # Product Code Entry
+        '''# Product Code Entry
         label_product_code = tk.Label(self, text="Código de producto", font=font_label,
                                       fg="white", bg="#252525")
         label_product_code.grid(row=3, column=0, padx=10, pady=10, sticky="w")
         self.entry_product_code = tk.Entry(self, bg="white", font=font_label)
-        self.entry_product_code.grid(row=3, column=1, padx=10, pady=10, sticky="e")
+        self.entry_product_code.grid(row=3, column=1, padx=10, pady=10, sticky="e")'''
 
         # Date Entry
         label_product_date = tk.Label(self, text="Fecha de Vencimiento", font=font_label,
@@ -215,7 +218,7 @@ class RegisterNewProduct(tk.Frame):
 
         # Save Button
         button_save = tk.Button(self, text="Guardar", font=font_label, bg="green", fg="white",
-                                command=lambda:controller.verificationRegisterProduct(self.entry_product_name,self.entry_product_code,self.entry_product_date,self.entry_product_marca,
+                                command=lambda:controller.verificationRegisterProduct(self.entry_product_name,self.entry_product_date,self.entry_product_marca,
                                                                                       self.entry_initial_quantity,self.entry_initial_price))
         button_save.grid(row=8, column=0, padx=10, pady=10, sticky="w")
 
@@ -235,7 +238,6 @@ class RegisterNewProduct(tk.Frame):
 
     def clean_entries(self):
         self.entry_product_name.delete(0, tk.END)
-        self.entry_product_code.delete(0, tk.END)
         self.entry_initial_price.delete(0, tk.END)
         self.entry_initial_quantity.delete(0, tk.END)
         self.entry_product_date.delete(0, tk.END)

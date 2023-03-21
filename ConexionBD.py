@@ -39,28 +39,17 @@ def consultaLogin(conn,user,contrasenia):
     except Exception as e:
         print("Ocurrió un error al consultar con where: ", e)
 
-def consultaRegistrarProducto(conn,name,code,date,marca,quantity,price):
+def consultaRegistrarProducto(conn,name,date,marca,quantity,price):
     try:
             cursor = conn.cursor()
-            consulta = "set ANSI_WARNINGS off INSERT INTO Productos(Nombre,Codigo,[Fecha de Vencimiento],Marca,[Cantidad Inicial],[Precio por unidad])VALUES(?,?,?,?,?,?);"
+            consulta = "set ANSI_WARNINGS off INSERT INTO Productos(Nombre,[Fecha de Vencimiento],Marca,[Cantidad Inicial],[Precio por unidad])VALUES(?,?,?,?,?);"
             nombre = name
-            codigo = code
             fecha = date
             marc = marca
             cantidad = quantity
             precio = price
-            cursor.execute(consulta,(nombre,codigo,fecha,marc,cantidad,precio))
+            cursor.execute(consulta,(nombre,fecha,marc,cantidad,precio))
             cursor.commit()
-
-            Resultado = cursor.fetchall()
-            if len(Resultado)<1:
-                return False
-            else:
-                return True
-
-            # Recorrer e imprimir
-            for Res in Resultado: 
-                print(Res)
                 
     except Exception as e:
         print("Ocurrió un error al insertar: ", e)
