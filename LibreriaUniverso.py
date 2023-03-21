@@ -3,8 +3,9 @@ import customtkinter as ctk
 from tkinter import messagebox as MessageBox
 import os
 import ConexionBD as bd
-from PIL import Image
 import tkinter.font as font
+from tkinter import *
+from PIL import Image,ImageTk
 
 class MyApp(tk.Tk):
     def __init__(self):
@@ -102,7 +103,34 @@ class MainMenu(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
         
-        
+        #Imagen de Generar Reporte de Inventario
+        global imagenGenerarReporteInventario
+        imgGenerarReporteInventario = Image.open("images//GenerarReporteInventario.png")
+        imgGenerarReporteInventario = imgGenerarReporteInventario.resize((100,100),Image.LANCZOS)
+        imagenGenerarReporteInventario = ImageTk.PhotoImage(imgGenerarReporteInventario)
+        lblImagen=Label(self,image=imagenGenerarReporteInventario,bg="#252525").place(x=68,y=90)
+
+        #Imagen Reporte de Ventas
+        global imagenGenerarReporteVentas
+        imgGenerarReporteVenta = Image.open("images//GenerarReporteVenta.png")
+        imgGenerarReporteVenta = imgGenerarReporteVenta.resize((100,100),Image.LANCZOS)
+        imagenGenerarReporteVentas = ImageTk.PhotoImage(imgGenerarReporteVenta)
+        lblImagen=Label(self,image=imagenGenerarReporteVentas,bg="#252525").place(x=300,y=90)
+
+        #Imagen Registrar Venta
+        global imagenRegistrarVenta
+        imgRegistrarVenta = Image.open("images//RegistrarVenta.png")
+        imgRegistrarVenta = imgRegistrarVenta.resize((100,100),Image.LANCZOS)
+        imagenRegistrarVenta = ImageTk.PhotoImage(imgRegistrarVenta)
+        lblImagen=Label(self,image=imagenRegistrarVenta,bg="#252525").place(x=525,y=90)
+
+        #Imagen Mantenimiento de Inventario
+        global imagenMantenimientoInventario
+        imgMantenimientoInventario = Image.open("images//MantenimientoInventario.png")
+        imgMantenimientoInventario = imgMantenimientoInventario.resize((100,100),Image.LANCZOS)
+        imagenMantenimientoInventario = ImageTk.PhotoImage(imgMantenimientoInventario)
+        lblImagen=Label(self,image=imagenMantenimientoInventario,bg="#252525").place(x=775,y=90)
+
         button_font = font.Font(size=12)
 
         # Add the menu buttons to this frame
@@ -134,6 +162,14 @@ class MainMenu(tk.Frame):
 class InventoryManagementMenu(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
+
+        #Imagen Inventario
+        global imagenInventario
+        imgInventario = Image.open("images//Inventario.png")
+        imgInventario = imgInventario.resize((100,100),Image.LANCZOS)
+        imagenInventario = ImageTk.PhotoImage(imgInventario)
+        lblImagen=Label(self,image=imagenInventario,bg="#252525").place(x=640,y=90)
+        
         font_frame = font.Font(size=12)
 
         # Add the menu buttons to this frame
