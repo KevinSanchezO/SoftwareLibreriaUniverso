@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import customtkinter as ctk
 from tkinter import messagebox as MessageBox
 import os
@@ -36,13 +37,13 @@ class MyApp(tk.Tk):
 
         # Create the frames
         self.frames = {}
-        for F in (LogIn, MainMenu, InventoryManagementMenu, RegisterNewProduct):
+        for F in (LogIn, MainMenu, InventoryManagementMenu, RegisterNewProduct, RegistrarVenta):
             frame = F(self.container, self)
             self.frames[F] = frame
             frame.grid(row=1, column=0, sticky="nsew")
 
         # Show the first frame
-        self.show_frame(LogIn)
+        self.show_frame(RegistrarVenta)
 
     def verificationRegisterProduct(self,name,date,marca,quantity,price):
         if name.get() == "" or date.get()=="" or marca.get()=="" or quantity.get()=="" or price.get()=="":
@@ -82,6 +83,7 @@ class LogIn(tk.Frame):
                         fg="white", bg="#252525").grid(row=0, 
                         column=0, padx=10, pady=10, sticky="w")
         self.entry_username = tk.Entry(self, bg="white", font=font_frame)
+        self.entry_username.focus()
         self.entry_username.grid(row=0, column=1, padx=10, pady=10, sticky="e")
         label_password = tk.Label(self, text="Password", font=font_frame,
                         fg="white", bg="#252525").grid(row=1, 
@@ -139,7 +141,7 @@ class MainMenu(tk.Frame):
         button2 = tk.Button(self, text="Reporte Ventas", font=button_font, 
                             bg="#1C66D6", fg="white")
         button3 = tk.Button(self, text="Registrar Venta", font=button_font, 
-                            bg="#1C66D6", fg="white")
+                            bg="#1C66D6", fg="white",command=lambda: controller.show_frame(RegistrarVenta))
         button4 = tk.Button(self, text="Mantenimiento Inventario", 
                             font=button_font, bg="#1C66D6", fg="white",
                             command=lambda: controller.show_frame(InventoryManagementMenu))
@@ -215,6 +217,7 @@ class RegisterNewProduct(tk.Frame):
                                       fg="white", bg="#252525")
         label_product_name.grid(row=2, column=0, padx=10, pady=10, sticky="w")
         self.entry_product_name = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_name.focus()
         self.entry_product_name.grid(row=2, column=1, padx=10, pady=10, sticky="e")
 
         '''# Product Code Entry
@@ -278,6 +281,107 @@ class RegisterNewProduct(tk.Frame):
         self.entry_initial_quantity.delete(0, tk.END)
         self.entry_product_date.delete(0, tk.END)
         self.entry_product_marca.delete(0, tk.END)
+        pass
+
+class RegistrarVenta(tk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent, bg="#252525")
+
+        font_title = font.Font(size=18, weight="bold")
+        font_subtitle = font.Font(size=14, weight="bold")
+        font_label = font.Font(size=12)
+
+        # Title
+        label_title = tk.Label(self, text="Registrar Venta", font=font_title,
+                               fg="white", bg="#252525")
+        label_title.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="w")
+
+        # Subtitle
+        label_subtitle = tk.Label(self, text="Filtro de venta", font=font_subtitle,
+                                  fg="white", bg="#252525")
+        label_subtitle.grid(row=1, column=0, columnspan=2, padx=10, pady=5, sticky="w")
+
+        # Product Name Entry
+        label_product_codeFactura = tk.Label(self, text="Codigo de Factura", font=font_label,
+                                      fg="white", bg="#252525")
+        label_product_codeFactura.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+        self.entry_product_codeFactura = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_codeFactura.grid(row=1, column=1, padx=10, pady=10, sticky="e")
+
+        # Date Entry
+        label_product_nameProduct = tk.Label(self, text="Nombre del Producto", font=font_label,
+                                      fg="white", bg="#252525")
+        label_product_nameProduct.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+        self.entry_product_nameProduct = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_nameProduct.grid(row=2, column=1, padx=10, pady=10, sticky="e")
+
+        # Marca Entry
+        label_product_codeProduct = tk.Label(self, text="Codigo del producto", font=font_label,
+                                      fg="white", bg="#252525")
+        label_product_codeProduct.grid(row=3, column=0, padx=10, pady=10, sticky="w")
+        self.entry_product_codeProduct = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_codeProduct.grid(row=3, column=1, padx=10, pady=10, sticky="e")
+
+        # Initial Quantity Entry
+        label_product_quantity = tk.Label(self, text="Cantidad a vender", font=font_label,
+                                           fg="white", bg="#252525")
+        label_product_quantity.grid(row=4, column=0, padx=10, pady=10, sticky="w")
+        self.entry_product_quantity = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_quantity.grid(row=4, column=1, padx=10, pady=10, sticky="e")
+
+        # Create an instance of Style widget
+        style = ttk.Style()
+        style.theme_use('clam')
+
+        # Add a Treeview widget
+        treeSelect = ttk.Treeview(self, column=("c1", "c2", "c3"), show='headings',selectmode = 'browse')
+        treeSelect.column("# 1", anchor=CENTER)
+        treeSelect.heading("# 1", text="Codigo")
+        treeSelect.column("# 2", anchor=CENTER)
+        treeSelect.heading("# 2", text="Nombre")
+        treeSelect.column("# 3", anchor=CENTER)
+        treeSelect.heading("# 3", text="Precio")
+        treeSelect.place(x=400,y=40)
+        vsb = ttk.Scrollbar(self,orient = "vertical",command = treeSelect.yview)
+        vsb.place(x=450+200+2+200+2+150, y=40, height=200+30)
+        treeSelect.configure(yscrollcommand=vsb.set)
+
+        #Add TreeView widget
+        tree = ttk.Treeview(self, column=("c1", "c2", "c3","c4"), show='headings',selectmode = 'browse')
+        tree.column("# 1", anchor=CENTER)
+        tree.heading("# 1", text="Codigo de Factura")
+        tree.column("# 2", anchor=CENTER)
+        tree.heading("# 2", text="Nombre del producto")
+        tree.column("# 3", anchor=CENTER)
+        tree.heading("# 3", text="Codigo del producto")
+        tree.column("# 4", anchor=CENTER)
+        tree.heading("# 4", text="Cantidad")
+        tree.place(x=0,y=290)
+        vsb = ttk.Scrollbar(self,orient = "vertical",command = tree.yview)
+        vsb.place(x=0+200+2+200+2+150+235, y=292, height=140)
+        tree.configure(yscrollcommand=vsb.set)
+        
+
+        # Save Button
+        button_save = tk.Button(self, text="Guardar", font=font_label, bg="green", fg="white")
+        button_save.grid(row=5, column=0, padx=10, pady=10, sticky="w")
+
+        # Clean Button
+        button_clean = tk.Button(self, text="LimpiarVenta", font=font_label, bg="gray", fg="white",
+                                 command=self.clean_entries)
+        button_clean.place(x=160,y=240)
+
+        # Exit Button
+        button_volver = tk.Button(self, text="Volver", font=font_label, bg="#D61C1C", fg="white",
+                                 command=lambda: controller.show_frame(MainMenu))
+        button_volver.place(x=330,y=240)
+
+
+    def clean_entries(self):
+        self.entry_product_codeFactura.delete(0, tk.END)
+        self.entry_product_nameProduct.delete(0, tk.END)
+        self.entry_product_codeProduct.delete(0, tk.END)
+        self.entry_product_quantity.delete(0, tk.END)
         pass
 
 if __name__ == "__main__":
