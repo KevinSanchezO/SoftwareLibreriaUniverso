@@ -39,6 +39,34 @@ def consultaLogin(conn,user,contrasenia):
     except Exception as e:
         print("Ocurrió un error al consultar con where: ", e)
 
+def consultaVerificarCantidad(conn,codigo,cantidad,producto):
+    cursor = conn.cursor()
+    consulta = "SET NOCOUNT ON SELECT * FROM Productos WHERE Codigo = ? and Nombre = ? and [Cantidad Inicial] > ?;"
+    cursor.execute(consulta,(codigo,producto,cantidad))
+    Resultado = cursor.fetchall()
+    if len(Resultado)<1:
+        return False
+    else:
+        return True
+    
+def consultaPrecio(conn,codigo,producto):
+    cursor = conn.cursor()
+    consulta = "SET NOCOUNT ON SELECT Nombre,[Precio por Unidad] FROM Productos WHERE Codigo = ? and Nombre = ?;"
+    cursor.execute(consulta,(codigo,producto))
+    Resultado = cursor.fetchall()
+    return Resultado
+
+def consultaProducts(conn):
+    try:
+            cursor = conn.cursor()
+            consulta = "SET NOCOUNT ON SELECT Codigo,Nombre,[Precio por unidad] FROM Productos;"
+            cursor.execute(consulta)
+            Resultado = cursor.fetchall()
+            return Resultado
+        
+    except Exception as e:
+        print("Ocurrió un error al consultar con where: ", e)
+
 def consultaRegistrarProducto(conn,name,date,marca,quantity,price):
     try:
             cursor = conn.cursor()

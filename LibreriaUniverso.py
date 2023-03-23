@@ -70,8 +70,13 @@ class MyApp(tk.Tk):
         frame = self.frames[frame_class]
         frame.tkraise()
         frame.clean_entries()
-                
-        
+    
+    def show_frameRegistrarVenta(self, frame_class):
+        frame = self.frames[frame_class]
+        frame.tkraise()
+        frame.clean_entries()
+        frame.rellenarProductos()
+                  
 class LogIn(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
@@ -141,7 +146,7 @@ class MainMenu(tk.Frame):
         button2 = tk.Button(self, text="Reporte Ventas", font=button_font, 
                             bg="#1C66D6", fg="white")
         button3 = tk.Button(self, text="Registrar Venta", font=button_font, 
-                            bg="#1C66D6", fg="white",command=lambda: controller.show_frame(RegistrarVenta))
+                            bg="#1C66D6", fg="white",command=lambda: controller.show_frameRegistrarVenta(RegistrarVenta))
         button4 = tk.Button(self, text="Mantenimiento Inventario", 
                             font=button_font, bg="#1C66D6", fg="white",
                             command=lambda: controller.show_frame(InventoryManagementMenu))
@@ -286,7 +291,7 @@ class RegisterNewProduct(tk.Frame):
 class RegistrarVenta(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
-
+        
         font_title = font.Font(size=18, weight="bold")
         font_subtitle = font.Font(size=14, weight="bold")
         font_label = font.Font(size=12)
@@ -301,28 +306,21 @@ class RegistrarVenta(tk.Frame):
                                   fg="white", bg="#252525")
         label_subtitle.grid(row=1, column=0, columnspan=2, padx=10, pady=5, sticky="w")
 
-        # Product Name Entry
-        label_product_codeFactura = tk.Label(self, text="Codigo de Factura", font=font_label,
-                                      fg="white", bg="#252525")
-        label_product_codeFactura.grid(row=1, column=0, padx=10, pady=10, sticky="w")
-        self.entry_product_codeFactura = tk.Entry(self, bg="white", font=font_label)
-        self.entry_product_codeFactura.grid(row=1, column=1, padx=10, pady=10, sticky="e")
-
-        # Date Entry
+        # Name Product Entry
         label_product_nameProduct = tk.Label(self, text="Nombre del Producto", font=font_label,
                                       fg="white", bg="#252525")
         label_product_nameProduct.grid(row=2, column=0, padx=10, pady=10, sticky="w")
         self.entry_product_nameProduct = tk.Entry(self, bg="white", font=font_label)
         self.entry_product_nameProduct.grid(row=2, column=1, padx=10, pady=10, sticky="e")
 
-        # Marca Entry
+        # Code Product Entry
         label_product_codeProduct = tk.Label(self, text="Codigo del producto", font=font_label,
                                       fg="white", bg="#252525")
         label_product_codeProduct.grid(row=3, column=0, padx=10, pady=10, sticky="w")
         self.entry_product_codeProduct = tk.Entry(self, bg="white", font=font_label)
         self.entry_product_codeProduct.grid(row=3, column=1, padx=10, pady=10, sticky="e")
 
-        # Initial Quantity Entry
+        # Quantity Entry
         label_product_quantity = tk.Label(self, text="Cantidad a vender", font=font_label,
                                            fg="white", bg="#252525")
         label_product_quantity.grid(row=4, column=0, padx=10, pady=10, sticky="w")
@@ -334,36 +332,42 @@ class RegistrarVenta(tk.Frame):
         style.theme_use('clam')
 
         # Add a Treeview widget
-        treeSelect = ttk.Treeview(self, column=("c1", "c2", "c3"), show='headings',selectmode = 'browse')
-        treeSelect.column("# 1", anchor=CENTER)
-        treeSelect.heading("# 1", text="Codigo")
-        treeSelect.column("# 2", anchor=CENTER)
-        treeSelect.heading("# 2", text="Nombre")
-        treeSelect.column("# 3", anchor=CENTER)
-        treeSelect.heading("# 3", text="Precio")
-        treeSelect.place(x=400,y=40)
-        vsb = ttk.Scrollbar(self,orient = "vertical",command = treeSelect.yview)
+        self.treeSelect = ttk.Treeview(self, column=("c0", "c1"))
+        self.treeSelect.column("# 0", anchor=CENTER)
+        self.treeSelect.heading("# 0", text="Codigo")
+        self.treeSelect.column("# 1", anchor=CENTER)
+        self.treeSelect.heading("# 1", text="Nombre")
+        self.treeSelect.column("# 2", anchor=CENTER)
+        self.treeSelect.heading("# 2", text="Precio")
+        self.treeSelect.place(x=400,y=40)
+        vsb = ttk.Scrollbar(self,orient = "vertical",command = self.treeSelect.yview)
         vsb.place(x=450+200+2+200+2+150, y=40, height=200+30)
-        treeSelect.configure(yscrollcommand=vsb.set)
+        self.treeSelect.configure(yscrollcommand=vsb.set)
+        
+        button_Select = tk.Button(self, text="Seleccionar", font=font_label, bg="green", fg="white",
+                                  command= self.seleccionarItem)
+        button_Select.place(x=900,y=280)
 
         #Add TreeView widget
-        tree = ttk.Treeview(self, column=("c1", "c2", "c3","c4"), show='headings',selectmode = 'browse')
-        tree.column("# 1", anchor=CENTER)
-        tree.heading("# 1", text="Codigo de Factura")
-        tree.column("# 2", anchor=CENTER)
-        tree.heading("# 2", text="Nombre del producto")
-        tree.column("# 3", anchor=CENTER)
-        tree.heading("# 3", text="Codigo del producto")
-        tree.column("# 4", anchor=CENTER)
-        tree.heading("# 4", text="Cantidad")
-        tree.place(x=0,y=290)
-        vsb = ttk.Scrollbar(self,orient = "vertical",command = tree.yview)
+        self.tree = ttk.Treeview(self, column=("c0", "c1", "c2"))
+        self.tree.column("# 0", anchor=CENTER)
+        self.tree.heading("# 0", text="Codigo de producto")
+        self.tree.column("# 1", anchor=CENTER)
+        self.tree.heading("# 1", text="Nombre del producto")
+        self.tree.column("# 2", anchor=CENTER)
+        self.tree.heading("# 2", text="Cantidad")
+        self.tree.column("# 3", anchor=CENTER)
+        self.tree.heading("# 3", text="Precio por unidad")
+        self.tree.place(x=0,y=290)
+        vsb = ttk.Scrollbar(self,orient = "vertical",command = self.tree.yview)
         vsb.place(x=0+200+2+200+2+150+235, y=292, height=140)
-        tree.configure(yscrollcommand=vsb.set)
+        self.tree.configure(yscrollcommand=vsb.set)
+        self.rellenarProductos()
         
-
         # Save Button
-        button_save = tk.Button(self, text="Guardar", font=font_label, bg="green", fg="white")
+        
+        button_save = tk.Button(self, text="Agregar", font=font_label, bg="green", fg="white",
+                                command = self.agregarFactura)
         button_save.grid(row=5, column=0, padx=10, pady=10, sticky="w")
 
         # Clean Button
@@ -373,12 +377,44 @@ class RegistrarVenta(tk.Frame):
 
         # Exit Button
         button_volver = tk.Button(self, text="Volver", font=font_label, bg="#D61C1C", fg="white",
-                                 command=lambda: controller.show_frame(MainMenu))
+                                 command=lambda:controller.show_frame(MainMenu))
         button_volver.place(x=330,y=240)
 
-
+    def agregarFactura(self):
+        if self.entry_product_codeProduct.get() == "" or self.entry_product_nameProduct.get()=="" or self.entry_product_quantity.get()=="":
+            MessageBox.showinfo("Error!", "Por favor ingrese los datos que se le solicitan")
+        else:
+            coneccion = bd.connect()
+            bandera = bd.consultaVerificarCantidad(coneccion,self.entry_product_codeProduct.get(),self.entry_product_quantity.get(),self.entry_product_nameProduct.get())
+            if bandera == True:
+                coneccion = bd.connect()
+                precio = bd.consultaPrecio(coneccion,self.entry_product_codeProduct.get(),self.entry_product_nameProduct.get())
+                for row in precio:
+                    self.tree.insert('', 0 , text=self.entry_product_codeProduct.get() ,values = (self.entry_product_nameProduct.get(),self.entry_product_quantity.get(),row[1]))
+            else:
+                MessageBox.showinfo("Error!", "Los datos son incorrectos")
+                
+    def seleccionarItem(self):
+        try:
+            self.clean_entries()
+            self.entry_product_codeProduct.insert(0,self.treeSelect.item(self.treeSelect.selection())['text'])
+            self.entry_product_nameProduct.insert(0,self.treeSelect.item(self.treeSelect.selection())['values'][0])
+        except IndexError as e:
+            MessageBox.showinfo("Error!", "Por favor seleccione algun elemento")
+            
+    def rellenarProductos(self):
+        #Coneccion y realizar consulta a la base de datos
+        records = self.treeSelect.get_children()
+        for element in records:
+            self.treeSelect.delete(element)
+        coneccion = bd.connect()
+        productos = bd.consultaProducts(coneccion)
+        
+        # Recorrer e imprimir
+        for row in productos:
+            self.treeSelect.insert('', 0 , text= row[0],values = (row[1],row[2]))
+            
     def clean_entries(self):
-        self.entry_product_codeFactura.delete(0, tk.END)
         self.entry_product_nameProduct.delete(0, tk.END)
         self.entry_product_codeProduct.delete(0, tk.END)
         self.entry_product_quantity.delete(0, tk.END)
