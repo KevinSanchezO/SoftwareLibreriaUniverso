@@ -39,6 +39,29 @@ def consultaLogin(conn,user,contrasenia):
     except Exception as e:
         print("Ocurrió un error al consultar con where: ", e)
 
+def consultarCodigoFactura(conn,codigo):
+    cursor = conn.cursor()
+    consulta = "SET NOCOUNT ON SELECT * FROM Facturas WHERE [Codigo de Factura] = ?;"
+    cursor.execute(consulta,(codigo))
+    Resultado = cursor.fetchall()
+    if len(Resultado)<1:
+        return True
+    else:
+        return False
+
+def consultaAgregarFactura(conn,codFactura,codProducto,producto,cantidad,precio,fecha,total):
+    cursor = conn.cursor()
+    consulta = "set ANSI_WARNINGS off INSERT INTO Facturas([Codigo de Factura],[Codigo de Producto],[Nombre del Producto],[Cantidad a Comprar],[Precio por unidad],Fecha,Total)VALUES(?,?,?,?,?,?,?);"
+    cursor.execute(consulta,(codFactura,codProducto,producto,cantidad,precio,fecha,total))
+    cursor.commit()
+
+def disminuirCantidad(conn,codProducto,producto,cantidad):
+    cursor = conn.cursor()
+    consulta = "set ANSI_WARNINGS off UPDATE Productos SET [Cantidad Inicial] = [Cantidad Inicial] - ? WHERE Codigo = ? and Nombre = ?;"
+    cursor.execute(consulta,(cantidad,codProducto,producto))
+    cursor.commit()
+    
+    
 def consultaVerificarCantidad(conn,codigo,cantidad,producto):
     cursor = conn.cursor()
     consulta = "SET NOCOUNT ON SELECT * FROM Productos WHERE Codigo = ? and Nombre = ? and [Cantidad Inicial] > ?;"
