@@ -82,7 +82,7 @@ def consultaPrecio(conn,codigo,producto):
 def consultaProducts(conn):
     try:
             cursor = conn.cursor()
-            consulta = "SET NOCOUNT ON SELECT Codigo,Nombre,[Precio por unidad] FROM Productos;"
+            consulta = "SET NOCOUNT ON SELECT Codigo,Nombre,[Cantidad Inicial] FROM Productos;"
             cursor.execute(consulta)
             Resultado = cursor.fetchall()
             return Resultado

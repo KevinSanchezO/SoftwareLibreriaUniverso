@@ -341,7 +341,7 @@ class RegistrarVenta(tk.Frame):
         self.treeSelect.column("# 1", anchor=CENTER)
         self.treeSelect.heading("# 1", text="Nombre")
         self.treeSelect.column("# 2", anchor=CENTER)
-        self.treeSelect.heading("# 2", text="Precio")
+        self.treeSelect.heading("# 2", text="Cantidad")
         self.treeSelect.place(x=400,y=10)
         vsb = ttk.Scrollbar(self,orient = "vertical",command = self.treeSelect.yview)
         vsb.place(x=450+200+2+200+2+150, y=10, height=200+30)
@@ -398,7 +398,7 @@ class RegistrarVenta(tk.Frame):
             coneccion = bd.connect()
             bandera = bd.consultaAgregarFactura(coneccion,self.entry_product_codeFactura.get(),self.tree.item(child)["text"],self.tree.item(child)["values"][0],self.tree.item(child)["values"][1],self.tree.item(child)["values"][2],"0",self.entry_product_Total.get())
             bd.disminuirCantidad(coneccion,self.tree.item(child)["text"],self.tree.item(child)["values"][0],self.tree.item(child)["values"][1])
-        self.reset()
+        self.rellenarProductos()
         
         MessageBox.showinfo("Aviso!", "Compra registrada con Exito")
 
