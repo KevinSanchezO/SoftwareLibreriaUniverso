@@ -8,10 +8,10 @@ def connect():
     password = '12345sa'
 
     #Server Kevin Sanchez
-    '''server = 'DESKTOP-KN8EIG1'
+    server = 'DESKTOP-KN8EIG1'
     database = 'LibreriaUniverso'
     username = 'sa'
-    password = 'abc1234' '''
+    password = 'abc1234'
     conn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
     return conn
 

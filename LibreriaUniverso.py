@@ -39,13 +39,14 @@ class MyApp(tk.Tk):
 
         # Create the frames
         self.frames = {}
-        for F in (LogIn, MainMenu, InventoryManagementMenu, RegisterNewProduct, RegistrarVenta):
+        for F in (LogIn, MainMenu, InventoryManagementMenu, RegisterNewProduct, 
+                  RegistrarVenta, ModifyInventory):
             frame = F(self.container, self)
             self.frames[F] = frame
             frame.grid(row=1, column=0, sticky="nsew")
 
         # Show the first frame
-        self.show_frame(LogIn)
+        self.show_frame(MainMenu)
 
     def verificationRegisterProduct(self,name,date,marca,quantity,price):
         if name.get() == "" or date.get()=="" or marca.get()=="" or quantity.get()=="" or price.get()=="":
@@ -90,14 +91,14 @@ class LogIn(tk.Frame):
         label_username = tk.Label(self, text="Username", font=font_frame,
                         fg="white", bg="#252525").grid(row=0, 
                         column=0, padx=10, pady=10, sticky="w")
-        self.entry_username = tk.Entry(self, bg="white", font=font_frame)
+        self.entry_username = tk.Entry(self, bg="#777777", fg="black", font=font_frame)
         self.entry_username.focus()
         self.entry_username.grid(row=0, column=1, padx=10, pady=10, sticky="e")
         label_password = tk.Label(self, text="Password", font=font_frame,
                         fg="white", bg="#252525").grid(row=1, 
                         column=0, padx=10, pady=10, sticky="w")
         
-        self.entry_password = tk.Entry(self, show="*", bg="white", font=font_frame)
+        self.entry_password = tk.Entry(self, show="*", bg="#777777", fg="black", font=font_frame)
         self.entry_password.grid(row=1, column=1, padx=10, pady=10, sticky="e")
         button_1 = tk.Button(self, text="Ingresar", bg="#1C66D6", fg="white", font=font_frame,
                     command=lambda: controller.verification(self.entry_username,self.entry_password)).grid(row=2,
@@ -173,6 +174,13 @@ class InventoryManagementMenu(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
 
+        #Imagen registrar producto
+        global imagenRegistrar
+        imgRegistrar = Image.open("images//register.png")
+        imgRegistrar = imgRegistrar.resize((100,100),Image.LANCZOS)
+        imagenRegistrar = ImageTk.PhotoImage(imgRegistrar)
+        lblImagenRegistrar=Label(self,image=imagenRegistrar,bg="#252525").place(x=200,y=90)
+
         #Imagen Inventario
         global imagenInventario
         imgInventario = Image.open("images//Inventario.png")
@@ -187,7 +195,8 @@ class InventoryManagementMenu(tk.Frame):
                             font=font_frame, bg="#1C66D6", fg="white",
                             command=lambda: controller.show_frame(RegisterNewProduct))
         button2 = tk.Button(self, text="Ver inventario", 
-                            font=font_frame, bg="#1C66D6", fg="white")
+                            font=font_frame, bg="#1C66D6", fg="white",
+                            command=lambda: controller.show_frame(ModifyInventory))
 
         # Arrange the buttons in a single row with a padding of 80 pixels
         button1.pack(side="left", padx=150, pady=200)
@@ -224,7 +233,7 @@ class RegisterNewProduct(tk.Frame):
         label_product_name = tk.Label(self, text="Nombre de producto", font=font_label,
                                       fg="white", bg="#252525")
         label_product_name.grid(row=2, column=0, padx=10, pady=10, sticky="w")
-        self.entry_product_name = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_name = tk.Entry(self, bg="#777777", font=font_label)
         self.entry_product_name.focus()
         self.entry_product_name.grid(row=2, column=1, padx=10, pady=10, sticky="e")
 
@@ -232,28 +241,28 @@ class RegisterNewProduct(tk.Frame):
         label_product_date = tk.Label(self, text="Fecha de Vencimiento", font=font_label,
                                       fg="white", bg="#252525")
         label_product_date.grid(row=4, column=0, padx=10, pady=10, sticky="w")
-        self.entry_product_date = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_date = tk.Entry(self, bg="#777777", font=font_label)
         self.entry_product_date.grid(row=4, column=1, padx=10, pady=10, sticky="e")
 
         # Marca Entry
         label_product_marca = tk.Label(self, text="Marca", font=font_label,
                                       fg="white", bg="#252525")
         label_product_marca.grid(row=5, column=0, padx=10, pady=10, sticky="w")
-        self.entry_product_marca = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_marca = tk.Entry(self, bg="#777777", font=font_label)
         self.entry_product_marca.grid(row=5, column=1, padx=10, pady=10, sticky="e")
 
         # Initial Quantity Entry
         label_initial_quantity = tk.Label(self, text="Cantidad inicial", font=font_label,
                                            fg="white", bg="#252525")
         label_initial_quantity.grid(row=6, column=0, padx=10, pady=10, sticky="w")
-        self.entry_initial_quantity = tk.Entry(self, bg="white", font=font_label)
+        self.entry_initial_quantity = tk.Entry(self, bg="#777777", font=font_label)
         self.entry_initial_quantity.grid(row=6, column=1, padx=10, pady=10, sticky="e")
 
         # Initial Quantity Entry
         label_initial_price = tk.Label(self, text="Precio por unidad", font=font_label,
                                            fg="white", bg="#252525")
         label_initial_price.grid(row=7, column=0, padx=10, pady=10, sticky="w")
-        self.entry_initial_price = tk.Entry(self, bg="white", font=font_label)
+        self.entry_initial_price = tk.Entry(self, bg="#777777", font=font_label)
         self.entry_initial_price.grid(row=7, column=1, padx=10, pady=10, sticky="e")
 
         # Save Button
@@ -263,7 +272,7 @@ class RegisterNewProduct(tk.Frame):
         button_save.grid(row=8, column=0, padx=10, pady=10, sticky="w")
 
         # Clean Button
-        button_clean = tk.Button(self, text="Limpiar", font=font_label, bg="gray", fg="white",
+        button_clean = tk.Button(self, text="Limpiar", font=font_label, bg="gray", fg="#FFFFFF",
                                  command=self.clean_entries)
         button_clean.grid(row=8, column=1, padx=10, pady=10, sticky="e")
 
@@ -306,28 +315,28 @@ class RegistrarVenta(tk.Frame):
         label_product_codeFactura = tk.Label(self, text="Codigo de Factura", font=font_label,
                                       fg="white", bg="#252525")
         label_product_codeFactura.grid(row=1, column=0, padx=10, pady=10, sticky="w")
-        self.entry_product_codeFactura = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_codeFactura = tk.Entry(self, bg="#777777", font=font_label)
         self.entry_product_codeFactura.grid(row=1, column=1, padx=10, pady=10, sticky="e")
 
         # Name Product Entry
         label_product_nameProduct = tk.Label(self, text="Nombre del Producto", font=font_label,
                                       fg="white", bg="#252525")
         label_product_nameProduct.grid(row=2, column=0, padx=10, pady=10, sticky="w")
-        self.entry_product_nameProduct = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_nameProduct = tk.Entry(self, bg="#777777", font=font_label)
         self.entry_product_nameProduct.grid(row=2, column=1, padx=10, pady=10, sticky="e")
 
         # Code Product Entry
         label_product_codeProduct = tk.Label(self, text="Codigo del producto", font=font_label,
                                       fg="white", bg="#252525")
         label_product_codeProduct.grid(row=3, column=0, padx=10, pady=10, sticky="w")
-        self.entry_product_codeProduct = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_codeProduct = tk.Entry(self, bg="#777777", font=font_label)
         self.entry_product_codeProduct.grid(row=3, column=1, padx=10, pady=10, sticky="e")
 
         # Quantity Entry
         label_product_quantity = tk.Label(self, text="Cantidad a vender", font=font_label,
                                            fg="white", bg="#252525")
         label_product_quantity.grid(row=4, column=0, padx=10, pady=10, sticky="w")
-        self.entry_product_quantity = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_quantity = tk.Entry(self, bg="#777777", font=font_label)
         self.entry_product_quantity.grid(row=4, column=1, padx=10, pady=10, sticky="e")
 
         # Create an instance of Style widget
@@ -354,7 +363,7 @@ class RegistrarVenta(tk.Frame):
         #Total Entry
         label_product_Total = tk.Label(self, text="Total", font=font_label,fg="white", bg="#252525")
         label_product_Total.place(x=810,y=360)
-        self.entry_product_Total = tk.Entry(self, bg="white", font=font_label)
+        self.entry_product_Total = tk.Entry(self, bg="#777777", font=font_label)
         self.entry_product_Total.insert(0,"0")
         self.entry_product_Total.place(x=850,y=360)
 
@@ -384,7 +393,7 @@ class RegistrarVenta(tk.Frame):
         button_save.grid(row=5, column=0, padx=10, pady=10, sticky="w")
 
         # Clean Button
-        button_clean = tk.Button(self, text="LimpiarVenta", font=font_label, bg="gray", fg="white",
+        button_clean = tk.Button(self, text="Limpiar Venta", font=font_label, bg="gray", fg="#FFFFFF", 
                                  command=self.clean_entries)
         button_clean.place(x=160,y=240)
 
@@ -471,6 +480,71 @@ class RegistrarVenta(tk.Frame):
         self.entry_product_codeProduct.delete(0, tk.END)
         self.entry_product_quantity.delete(0, tk.END)
         pass
+
+class ModifyInventory(tk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent, bg="#252525")
+        
+        font_title = font.Font(size=18, weight="bold")
+        font_subtitle = font.Font(size=14, weight="bold")
+        font_label = font.Font(size=12)
+
+        # Title
+        label_title = tk.Label(self, text="Modificación de inventario", font=font_title,
+                               fg="white", bg="#252525").grid(row=0, column=0, 
+                                columnspan=2, padx=10, pady=10, sticky="w")
+
+        #Product code entry
+        label_product_code = tk.Label(self, text="Codigo de Producto", font=font_label,
+            fg="white", bg="#252525").grid(row=1, column=0, padx=10, pady=10, sticky="w")
+        self.entry_product_code = tk.Entry(self, bg="#777777", 
+            font=font_label, state='disabled').grid(row=1, column=1, padx=10, pady=10, sticky="e")
+
+        #Product name entry
+        label_product_name = tk.Label(self, text="Nombre de Producto", font=font_label,
+            fg="white", bg="#252525").grid(row=2, column=0, padx=10, pady=10, sticky="w")
+        self.entry_product_name = tk.Entry(self, bg="#777777", 
+            font=font_label).grid(row=2, column=1, padx=10, pady=10, sticky="e")
+
+        #Product date entry
+        label_product_date = tk.Label(self, text="Fecha de vencimiento", font=font_label,
+            fg="white", bg="#252525").grid(row=3, column=0, padx=10, pady=10, sticky="w")
+        self.entry_product_date = tk.Entry(self, bg="#777777", 
+            font=font_label).grid(row=3, column=1, padx=10, pady=10, sticky="e")
+
+        #Product brand entry
+        label_product_brand = tk.Label(self, text="Fecha de vencimiento", font=font_label,
+            fg="white", bg="#252525").grid(row=4, column=0, padx=10, pady=10, sticky="w")
+        self.entry_product_brand = tk.Entry(self, bg="#777777", 
+            font=font_label).grid(row=4, column=1, padx=10, pady=10, sticky="e")
+
+        #Product quantity entry
+        label_product_quantity = tk.Label(self, text="Cantidad de producto", font=font_label,
+            fg="white", bg="#252525").grid(row=5, column=0, padx=10, pady=10, sticky="w")
+        
+        self.entry_product_quantity = tk.Entry(self, bg="#777777", 
+            font=font_label).grid(row=5, column=1, padx=10, pady=10, sticky="w")
+
+        self.buttonDecress = tk.Button(self, text="-", font=font_label, bg="#1C66D6", 
+            fg="white").grid(row=5, column=2, padx=10, pady=10, sticky="w")
+        
+        self.buttonIncrees = tk.Button(self, text="+", font=font_label, bg="#1C66D6", 
+            fg="white").grid(row=5, column=3, padx=10, pady=10, sticky="w")
+        
+        #Product price entry
+        label_product_price = tk.Label(self, text="Precio por unidad", font=font_label,
+            fg="white", bg="#252525").grid(row=6, column=0, padx=10, pady=10, sticky="w")
+        self.entry_product_price = tk.Entry(self, bg="#777777", 
+            font=font_label).grid(row=6, column=1, padx=10, pady=10, sticky="e")
+
+    def clean_entries(self):
+        self.entry_product_code.delete(0, tk.END)
+        self.entry_product_name.delete(0, tk.END)
+        self.entry_product_brand.delete(0, tk.END)
+        self.entry_product_date.delete(0, tk.END)
+        self.entry_product_quantity.delete(0, tk.END)
+        self.entry_product_price.delete(0, tk.END)
+        
 
 if __name__ == "__main__":
     app = MyApp()
