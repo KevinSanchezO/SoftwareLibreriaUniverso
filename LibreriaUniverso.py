@@ -10,6 +10,12 @@ import tkinter.font as font
 from tkinter import *
 from PIL import Image,ImageTk
 
+# Supported modes : Light, Dark, System
+ctk.set_appearance_mode("System")
+ 
+# Supported themes : green, dark-blue, blue
+ctk.set_default_color_theme("blue")   
+
 class MyApp(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -46,7 +52,7 @@ class MyApp(tk.Tk):
             frame.grid(row=1, column=0, sticky="nsew")
 
         # Show the first frame
-        self.show_frame(RegistrarVenta)
+        self.show_frame(MainMenu)
 
     def verificationRegisterProduct(self,name,date,marca,quantity,price):
         if name.get() == "" or date.get()=="" or marca.get()=="" or quantity.get()=="" or price.get()=="":
@@ -58,6 +64,7 @@ class MyApp(tk.Tk):
             
 
     def verification(self,user,password):
+
         if user.get() == "" or password.get()=="":
             MessageBox.showinfo("Error!", "Por favor ingrese un usuario y su contraseña")
             
@@ -65,7 +72,7 @@ class MyApp(tk.Tk):
             coneccion = bd.connect()
             bandera = bd.consultaLogin(coneccion,user.get(),password.get())
             if bandera == True:
-                frame = self.frames[LogIn]
+                frame = self.frames[MainMenu]
                 frame.tkraise()
             else:
                 MessageBox.showinfo("Error!", "El usuario ingresado es incorrecto o no existe")
@@ -85,25 +92,33 @@ class LogIn(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
         parent.config(width=200,height=200) 
-        font_frame = font.Font(size=12)
+        font_frame = my_font = ctk.CTkFont(size=18)
+        title_font_frame = my_font = ctk.CTkFont(size=38)
+
+        label_title = ctk.CTkLabel(self, text="Iniciar Sesion", 
+                            font=title_font_frame).place(x=408, y=65)
 
         # Add the login widgets to this frame
-        label_username = tk.Label(self, text="Username", font=font_frame,
-                        fg="white", bg="#252525").grid(row=0, 
-                        column=0, padx=10, pady=10, sticky="w")
-        self.entry_username = tk.Entry(self, bg="#777777", fg="black", font=font_frame)
-        self.entry_username.focus()
-        self.entry_username.grid(row=0, column=1, padx=10, pady=10, sticky="e")
-        label_password = tk.Label(self, text="Password", font=font_frame,
-                        fg="white", bg="#252525").grid(row=1, 
-                        column=0, padx=10, pady=10, sticky="w")
+        label_username = ctk.CTkLabel(self, text="Nombre de usuario", 
+                            font=font_frame).place(x=440, y=90+78)
         
-        self.entry_password = tk.Entry(self, show="*", bg="#777777", fg="black", font=font_frame)
-        self.entry_password.grid(row=1, column=1, padx=10, pady=10, sticky="e")
-        button_1 = tk.Button(self, text="Ingresar", bg="#1C66D6", fg="white", font=font_frame,
-                    command=lambda: controller.verification(self.entry_username,self.entry_password)).grid(row=2,
-                    column=0, columnspan=2, padx=10, pady=10)#controller.show_frame(MainMenu)).grid(row=2,
-                    #column=0, columnspan=2, padx=10, pady=10)
+        self.entry_username = ctk.CTkEntry(self, width=300,
+                               height=30,
+                               border_width=2, font=font_frame)
+        self.entry_username.focus()
+        self.entry_username.place(x=365, y=130+78)
+
+        label_password = ctk.CTkLabel(self, text="Contraseña",
+                                font=font_frame).place(x=470, y=180+78)
+    
+        self.entry_password = ctk.CTkEntry(self, show="*", width=300,
+                               height=30,
+                               border_width=2, font=font_frame)
+        self.entry_password.focus()
+        self.entry_password.place(x=365, y=220+78)
+        
+        button_1 = ctk.CTkButton(self, text="Ingresar", font=font_frame, height=40,
+                    command=lambda: controller.verification(self.entry_username,self.entry_password)).place(x=446, y=280+78)
 
     def clean_entries(self):
         self.entry_username.delete(0, tk.END)
@@ -113,59 +128,62 @@ class MainMenu(tk.Frame):
     
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
+        font_frame = my_font = ctk.CTkFont(size=18)
+        title_font_frame = my_font = ctk.CTkFont(size=38)
         
         #Imagen de Generar Reporte de Inventario
         global imagenGenerarReporteInventario
         imgGenerarReporteInventario = Image.open("images//GenerarReporteInventario.png")
         imgGenerarReporteInventario = imgGenerarReporteInventario.resize((100,100),Image.LANCZOS)
         imagenGenerarReporteInventario = ImageTk.PhotoImage(imgGenerarReporteInventario)
-        lblImagen=Label(self,image=imagenGenerarReporteInventario,bg="#252525").place(x=68,y=90)
+        lblImagen=Label(self,image=imagenGenerarReporteInventario,bg="#252525").place(x=95,y=190)
 
         #Imagen Reporte de Ventas
         global imagenGenerarReporteVentas
         imgGenerarReporteVenta = Image.open("images//GenerarReporteVenta.png")
         imgGenerarReporteVenta = imgGenerarReporteVenta.resize((100,100),Image.LANCZOS)
         imagenGenerarReporteVentas = ImageTk.PhotoImage(imgGenerarReporteVenta)
-        lblImagen=Label(self,image=imagenGenerarReporteVentas,bg="#252525").place(x=300,y=90)
+        lblImagen=Label(self,image=imagenGenerarReporteVentas,bg="#252525").place(x=340,y=190)
 
         #Imagen Registrar Venta
         global imagenRegistrarVenta
         imgRegistrarVenta = Image.open("images//RegistrarVenta.png")
         imgRegistrarVenta = imgRegistrarVenta.resize((100,100),Image.LANCZOS)
         imagenRegistrarVenta = ImageTk.PhotoImage(imgRegistrarVenta)
-        lblImagen=Label(self,image=imagenRegistrarVenta,bg="#252525").place(x=525,y=90)
+        lblImagen=Label(self,image=imagenRegistrarVenta,bg="#252525").place(x=580,y=190)
 
         #Imagen Mantenimiento de Inventario
         global imagenMantenimientoInventario
         imgMantenimientoInventario = Image.open("images//MantenimientoInventario.png")
         imgMantenimientoInventario = imgMantenimientoInventario.resize((100,100),Image.LANCZOS)
         imagenMantenimientoInventario = ImageTk.PhotoImage(imgMantenimientoInventario)
-        lblImagen=Label(self,image=imagenMantenimientoInventario,bg="#252525").place(x=775,y=90)
+        lblImagen=Label(self,image=imagenMantenimientoInventario,bg="#252525").place(x=820,y=190)
 
         button_font = font.Font(size=12)
 
-        # Add the menu buttons to this frame
-        button1 = tk.Button(self, text="Reporte Inventario", font=button_font, 
-                            bg="#1C66D6", fg="white")
-        button2 = tk.Button(self, text="Reporte Ventas", font=button_font, 
-                            bg="#1C66D6", fg="white")
-        button3 = tk.Button(self, text="Registrar Venta", font=button_font, 
-                            bg="#1C66D6", fg="white",command=lambda: controller.show_frameRegistrarVenta(RegistrarVenta))
-        button4 = tk.Button(self, text="Mantenimiento Inventario", 
-                            font=button_font, bg="#1C66D6", fg="white",
+        # Add the menu buttons to this frame  Reporte Inventario
+        button1 = ctk.CTkButton(self, text="Reporte Inventario", font=font_frame, height=36)
+
+        button2 = ctk.CTkButton(self, text="Reporte Ventas", font=font_frame, height=36)
+        
+        button3 = ctk.CTkButton(self, text="Registrar Venta", font=font_frame, height=36,
+                    command=lambda: controller.show_frameRegistrarVenta(RegistrarVenta))
+        
+        button4 = ctk.CTkButton(self, text="Mantenimiento\nInventario", font=font_frame, height=36,
                             command=lambda: controller.show_frame(InventoryManagementMenu))
 
         # Arrange the buttons in a single row with a padding of 80 pixels
-        button1.pack(side="left", padx=50, pady=200)
-        button2.pack(side="left", padx=50, pady=200)
-        button3.pack(side="left", padx=50, pady=200)
-        button4.pack(side="left", padx=50, pady=200)
+        button1.place(x=70,y=300)
+        button2.place(x=320,y=300)
+        button3.place(x=550,y=300)
+        button4.place(x=800,y=300)
 
         # Add a back button to return to the login screen
-        back_button = tk.Button(self, text="Salir", bg="#D61C1C", 
-                                fg="white", font=button_font,
-                                command=lambda: controller.show_frame(LogIn))
-        back_button.pack(side="bottom")
+        back_button = ctk.CTkButton(self, 
+                                    text="Salir", 
+                                    font=font_frame,
+                                    command=lambda: controller.show_frame(LogIn))
+        back_button.place(x=450,y=400)
 
     def clean_entries(self):
         pass
