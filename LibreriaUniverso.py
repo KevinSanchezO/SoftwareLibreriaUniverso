@@ -23,12 +23,14 @@ class MyApp(tk.Tk):
         # Set the geometry of the main window
         self.geometry("1040x680")
 
+        self.title("Libreria Universo")
+
         # Create the container frame
         self.container = tk.Frame(self, bg="#252525")
         self.container.pack(fill="both", expand=True)
 
         # Create the header frame
-        self.header = tk.Frame(self.container, bg="#252525", height=50)
+        self.header = tk.Frame(self.container, bg="#181818", height=50)
         self.header.grid(row=0, column=0, sticky="ew")
 
         # Create the logo label
@@ -52,7 +54,7 @@ class MyApp(tk.Tk):
             frame.grid(row=1, column=0, sticky="nsew")
 
         # Show the first frame
-        self.show_frame(MainMenu)
+        self.show_frame(LogIn)
 
     def verificationRegisterProduct(self,name,date,marca,quantity,price):
         if name.get() == "" or date.get()=="" or marca.get()=="" or quantity.get()=="" or price.get()=="":
@@ -97,6 +99,8 @@ class LogIn(tk.Frame):
 
         label_title = ctk.CTkLabel(self, text="Iniciar Sesion", 
                             font=title_font_frame).place(x=408, y=65)
+        
+        label1 = Label(self, text="").grid(row=0, column=0,padx=1000,pady=1000)
 
         # Add the login widgets to this frame
         label_username = ctk.CTkLabel(self, text="Nombre de usuario", 
@@ -128,29 +132,32 @@ class MainMenu(tk.Frame):
     
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
-        font_frame = my_font = ctk.CTkFont(size=18)
-        title_font_frame = my_font = ctk.CTkFont(size=38)
+        font_frame =  ctk.CTkFont(size=18)
+        title_font_frame = ctk.CTkFont(size=38)
+
+        label_title = ctk.CTkLabel(self, text="Menu de inicio", 
+                            font=title_font_frame).place(x=30, y=30)
         
         #Imagen de Generar Reporte de Inventario
         global imagenGenerarReporteInventario
         imgGenerarReporteInventario = Image.open("images//GenerarReporteInventario.png")
         imgGenerarReporteInventario = imgGenerarReporteInventario.resize((100,100),Image.LANCZOS)
         imagenGenerarReporteInventario = ImageTk.PhotoImage(imgGenerarReporteInventario)
-        lblImagen=Label(self,image=imagenGenerarReporteInventario,bg="#252525").place(x=95,y=190)
+        lblImagen=Label(self,image=imagenGenerarReporteInventario,bg="#252525").place(x=115,y=190)
 
         #Imagen Reporte de Ventas
         global imagenGenerarReporteVentas
         imgGenerarReporteVenta = Image.open("images//GenerarReporteVenta.png")
         imgGenerarReporteVenta = imgGenerarReporteVenta.resize((100,100),Image.LANCZOS)
         imagenGenerarReporteVentas = ImageTk.PhotoImage(imgGenerarReporteVenta)
-        lblImagen=Label(self,image=imagenGenerarReporteVentas,bg="#252525").place(x=340,y=190)
+        lblImagen=Label(self,image=imagenGenerarReporteVentas,bg="#252525").place(x=360,y=190)
 
         #Imagen Registrar Venta
         global imagenRegistrarVenta
         imgRegistrarVenta = Image.open("images//RegistrarVenta.png")
         imgRegistrarVenta = imgRegistrarVenta.resize((100,100),Image.LANCZOS)
         imagenRegistrarVenta = ImageTk.PhotoImage(imgRegistrarVenta)
-        lblImagen=Label(self,image=imagenRegistrarVenta,bg="#252525").place(x=580,y=190)
+        lblImagen=Label(self,image=imagenRegistrarVenta,bg="#252525").place(x=600,y=190)
 
         #Imagen Mantenimiento de Inventario
         global imagenMantenimientoInventario
@@ -158,8 +165,6 @@ class MainMenu(tk.Frame):
         imgMantenimientoInventario = imgMantenimientoInventario.resize((100,100),Image.LANCZOS)
         imagenMantenimientoInventario = ImageTk.PhotoImage(imgMantenimientoInventario)
         lblImagen=Label(self,image=imagenMantenimientoInventario,bg="#252525").place(x=820,y=190)
-
-        button_font = font.Font(size=12)
 
         # Add the menu buttons to this frame  Reporte Inventario
         button1 = ctk.CTkButton(self, text="Reporte Inventario", font=font_frame, height=36)
@@ -173,15 +178,17 @@ class MainMenu(tk.Frame):
                             command=lambda: controller.show_frame(InventoryManagementMenu))
 
         # Arrange the buttons in a single row with a padding of 80 pixels
-        button1.place(x=70,y=300)
-        button2.place(x=320,y=300)
-        button3.place(x=550,y=300)
-        button4.place(x=800,y=300)
+        button1.place(x=90,y=310)
+        button2.place(x=340,y=310)
+        button3.place(x=580,y=310)
+        button4.place(x=802,y=300)
 
         # Add a back button to return to the login screen
         back_button = ctk.CTkButton(self, 
                                     text="Salir", 
                                     font=font_frame,
+                                    fg_color="#D61C1C",
+                                    hover_color="#9E1818",
                                     command=lambda: controller.show_frame(LogIn))
         back_button.place(x=450,y=400)
 
@@ -192,39 +199,48 @@ class InventoryManagementMenu(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
 
+        font_frame =  ctk.CTkFont(size=18)
+        title_font_frame = ctk.CTkFont(size=38)
+
+        label_title = ctk.CTkLabel(self, text="Mantenimiento de inventario", 
+                            font=title_font_frame).place(x=30, y=30) 
+
         #Imagen registrar producto
         global imagenRegistrar
         imgRegistrar = Image.open("images//register.png")
         imgRegistrar = imgRegistrar.resize((100,100),Image.LANCZOS)
         imagenRegistrar = ImageTk.PhotoImage(imgRegistrar)
-        lblImagenRegistrar=Label(self,image=imagenRegistrar,bg="#252525").place(x=200,y=90)
+        lblImagenRegistrar=Label(self,image=imagenRegistrar,bg="#252525").place(x=280,y=190)
 
         #Imagen Inventario
         global imagenInventario
         imgInventario = Image.open("images//Inventario.png")
         imgInventario = imgInventario.resize((100,100),Image.LANCZOS)
         imagenInventario = ImageTk.PhotoImage(imgInventario)
-        lblImagen=Label(self,image=imagenInventario,bg="#252525").place(x=640,y=90)
-        
-        font_frame = font.Font(size=12)
+        lblImagen=Label(self,image=imagenInventario,bg="#252525").place(x=640,y=190)
+
 
         # Add the menu buttons to this frame
-        button1 = tk.Button(self, text="Registrar nuevo producto", 
-                            font=font_frame, bg="#1C66D6", fg="white",
+        button1 = ctk.CTkButton(self, text="Registrar nuevo\nproducto", 
+                            font=font_frame,
                             command=lambda: controller.show_frame(RegisterNewProduct))
-        button2 = tk.Button(self, text="Ver inventario", 
-                            font=font_frame, bg="#1C66D6", fg="white",
+
+        button2 = ctk.CTkButton(self, text="Ver inventario", 
+                            font=font_frame,
                             command=lambda: controller.show_frame(ModifyInventory))
 
         # Arrange the buttons in a single row with a padding of 80 pixels
-        button1.pack(side="left", padx=150, pady=200)
-        button2.pack(side="left", padx=150, pady=200)
+        button1.place(x=260,y=300)
+        button2.place(x=620,y=315)
 
-        # Add a back button to return to the login screen
-        back_button = tk.Button(self, text="Salir", bg="#D61C1C", 
-                                fg="white", font=font_frame,
-                                command=lambda: controller.show_frame(MainMenu))
-        back_button.pack(side="bottom")
+        back_button = ctk.CTkButton(self, 
+                                    text="Salir", 
+                                    font=font_frame,
+                                    fg_color="#D61C1C",
+                                    hover_color="#9E1818",
+                                    command=lambda: controller.show_frame(MainMenu))
+        back_button.place(x=450,y=400)
+        
 
     def clean_entries(self):
         pass
