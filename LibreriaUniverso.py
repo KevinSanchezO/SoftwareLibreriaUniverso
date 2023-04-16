@@ -68,7 +68,7 @@ class MyApp(tk.Tk):
             frame.grid(row=1, column=0, sticky="nsew")
 
         # Show the first frame
-        self.show_frame("RegistrarVenta")
+        self.show_frame("LogIn")
 
     def verificationRegisterProduct(self,name,date,marca,quantity,price):
         if name.get() == "" or date.get()=="" or marca.get()=="" or quantity.get()=="" or price.get()=="":
