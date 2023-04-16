@@ -53,7 +53,7 @@ class ModifyInventory(tk.Frame):
         self.buttonSelect = ctk.CTkButton(self, text="Seleccionar", 
                                         font=font_frame, 
                                         fg_color="#17A926",
-                                        hover_color="#0F6B18",).place(x=460, y=325)
+                                        hover_color="#0F6B18").place(x=460, y=325)
 
         #Product code entry
         label_product_code = ctk.CTkLabel(self, text="Codigo de Producto", 
