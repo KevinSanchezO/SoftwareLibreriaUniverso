@@ -7,7 +7,6 @@ import string
 import random
 import tkinter.font as font
 from tkinter import *
-from PIL import Image,ImageTk
 
 class RegistrarVenta(tk.Frame):
     def __init__(self, parent, controller):

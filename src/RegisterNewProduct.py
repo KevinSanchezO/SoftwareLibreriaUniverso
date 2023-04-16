@@ -1,7 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
 import customtkinter as ctk
-import ConexionBD as bd
 import tkinter.font as font
 from tkinter import *
 

@@ -1,6 +1,5 @@
 import tkinter as tk
 import customtkinter as ctk
-import ConexionBD as bd
 from tkinter import *
 
 

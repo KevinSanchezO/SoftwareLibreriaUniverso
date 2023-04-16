@@ -1,117 +1,153 @@
 import tkinter as tk
 from tkinter import ttk
 import customtkinter as ctk
-import ConexionBD as bd
+
 import tkinter.font as font
 from tkinter import *
 
 class ModifyInventory(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#252525")
-        
-        font_title = font.Font(size=18, weight="bold")
-        font_subtitle = font.Font(size=14, weight="bold")
-        font_label = font.Font(size=12)
+
+        font_frame =  ctk.CTkFont(size=16)
+        title_font_frame = ctk.CTkFont(size=26)
 
         # Title
-        label_title = tk.Label(self, text="Modificación de inventario", font=font_title,
-                               fg="white", bg="#252525").grid(row=0, column=0, 
-                                columnspan=2, padx=10, pady=10, sticky="w")
-
-        #Product code entry
-        label_product_code = tk.Label(self, text="Codigo de Producto", font=font_label,
-            fg="white", bg="#252525").grid(row=1, column=0, padx=10, pady=10, sticky="w")
-        self.entry_product_code = tk.Entry(self, bg="#777777", 
-            font=font_label, state='disabled').grid(row=1, column=1, padx=10, pady=10, sticky="e")
-
-        #Product name entry
-        label_product_name = tk.Label(self, text="Nombre de Producto", font=font_label,
-            fg="white", bg="#252525").grid(row=2, column=0, padx=10, pady=10, sticky="w")
-        self.entry_product_name = tk.Entry(self, bg="#777777", 
-            font=font_label).grid(row=2, column=1, padx=10, pady=10, sticky="e")
-
-        #Product date entry
-        label_product_date = tk.Label(self, text="Fecha de vencimiento", font=font_label,
-            fg="white", bg="#252525").grid(row=3, column=0, padx=10, pady=10, sticky="w")
-        self.entry_product_date = tk.Entry(self, bg="#777777", 
-            font=font_label).grid(row=3, column=1, padx=10, pady=10, sticky="e")
-
-        #Product brand entry
-        label_product_brand = tk.Label(self, text="Marca", font=font_label,
-            fg="white", bg="#252525").grid(row=4, column=0, padx=10, pady=10, sticky="w")
-        self.entry_product_brand = tk.Entry(self, bg="#777777", 
-            font=font_label).grid(row=4, column=1, padx=10, pady=10, sticky="e")
-
-        #Product quantity entry
-        label_product_quantity = tk.Label(self, text="Cantidad de producto", font=font_label,
-            fg="white", bg="#252525").grid(row=5, column=0, padx=10, pady=10, sticky="w")
+        label_title = ctk.CTkLabel(self, text="Modificación de inventario", 
+                                   font=title_font_frame).place(x=10,y=10)
         
-        self.entry_product_quantity = tk.Entry(self, bg="#777777", 
-            font=font_label).grid(row=5, column=1, padx=10, pady=10, sticky="w")
-
-        self.buttonDecress = tk.Button(self, text="-", font=font_label, bg="#1C66D6", 
-            fg="white").place(x=169, y=238)
+        # Search fields
+        label_search_name = ctk.CTkLabel(self, text="Filtro de nombre", 
+                                         font=font_frame).place(x=150, y=50)
+        self.entry_search_name= ctk.CTkEntry(self, font=font_frame, 
+                                             width=500,
+                                            height=30,
+                                            border_width=2,)
+        self.entry_search_name.focus()
+        self.entry_search_name.place(x=280, y=50)
+        self.buttonActionSearch = ctk.CTkButton(self, text="Buscar", 
+                                                font=font_frame,
+                                                width=100,
+                                                height=20).place(x=800, y=55)
         
-        self.buttonIncrees = tk.Button(self, text="+", font=font_label, bg="#1C66D6", 
-            fg="white").place(x=375, y=238)
-        
-        #Product price entry
-        label_product_price = tk.Label(self, text="Precio por unidad", font=font_label,
-            fg="white", bg="#252525").grid(row=6, column=0, padx=10, pady=10, sticky="w")
-        self.entry_product_price = tk.Entry(self, bg="#777777", 
-            font=font_label).grid(row=6, column=1, padx=10, pady=10, sticky="e")
-
         # Create an instance of Style widget
         style = ttk.Style()
         style.theme_use('clam')
 
         # Add a Treeview widget
-        self.treeSelect = ttk.Treeview(self, column=("c0", "c1"))
-        self.treeSelect.column("# 0", anchor=CENTER)
-        self.treeSelect.heading("# 0", text="Codigo")
-        self.treeSelect.column("# 1", anchor=CENTER)
-        self.treeSelect.heading("# 1", text="Nombre")
-        self.treeSelect.column("# 2", anchor=CENTER)
-        self.treeSelect.heading("# 2", text="Cantidad")
-        self.treeSelect.place(x=410,y=90)
-        vsb = ttk.Scrollbar(self,orient = "vertical",command = self.treeSelect.yview)
-        vsb.place(x=1004, y=90, height=230)
-        self.treeSelect.configure(yscrollcommand=vsb.set)
-
-        label_search_code = tk.Label(self, text="Filtro de código", font=font_label,
-            fg="white", bg="#252525").place(x=410, y=35)
-        self.entry_search_code = tk.Entry(self, bg="#777777", 
-            font=font_label).place(x=530, y=35)
-
-        label_search_name = tk.Label(self, text="Filtro de nombre", font=font_label,
-            fg="white", bg="#252525").place(x=410, y=65)
-        self.entry_search_name= tk.Entry(self, bg="#777777", 
-            font=font_label).place(x=530, y=65)
+        #Add TreeView widget
+        self.tree = ttk.Treeview(self, column=("c0", "c1", "c2"))
+        self.tree.column("# 0", anchor=CENTER)
+        self.tree.heading("# 0", text="Codigo de producto")
+        self.tree.column("# 1", anchor=CENTER)
+        self.tree.heading("# 1", text="Nombre del producto")
+        self.tree.column("# 2", anchor=CENTER)
+        self.tree.heading("# 2", text="Cantidad")
+        self.tree.column("# 3", anchor=CENTER)
+        self.tree.heading("# 3", text="Precio por unidad")
+        self.tree.place(x=130,y=90)
+        vsb = ttk.Scrollbar(self,orient = "vertical",command = self.tree.yview)
+        vsb.place(x=935, y=90, height=230)
+        self.tree.configure(yscrollcommand=vsb.set)
         
-        self.buttonActionSearch = tk.Button(self, text="Buscar", font=font_label, bg="#1C66D6", 
-            fg="white").place(x=950, y=55)
+        self.buttonSelect = ctk.CTkButton(self, text="Seleccionar", 
+                                        font=font_frame, 
+                                        fg_color="#17A926",
+                                        hover_color="#0F6B18",).place(x=460, y=325)
 
-        self.buttonSelect = tk.Button(self, text="Seleccionar", font=font_label, bg="green", 
-            fg="white").place(x=660, y=325)
+        #Product code entry
+        label_product_code = ctk.CTkLabel(self, text="Codigo de Producto", 
+                                          font=font_frame).place(x=60,y=380)
+        self.entry_product_code = ctk.CTkEntry(self, font=font_frame, 
+                                            width=220,
+                                            height=30,
+                                            border_width=2,
+                                            state="disabled")
+        self.entry_product_code.focus()
+        self.entry_product_code.place(x=220,y=380)
+        
+        #Product name entry
+        label_product_name = ctk.CTkLabel(self, text="Nombre de Producto",
+                                      font=font_frame).place(x=60,y=430)
+        self.entry_product_name = ctk.CTkEntry(self, font=font_frame, 
+                                            width=220,
+                                            height=30,
+                                            border_width=2)
+        self.entry_product_name.focus()
+        self.entry_product_name.place(x=220,y=430)
+        
+        #Product date entry
+        label_product_date = ctk.CTkLabel(self, text="Fecha de vencimiento", 
+                                          font=font_frame).place(x=60,y=480)
+        self.entry_product_date = ctk.CTkEntry(self, font=font_frame, 
+                                            width=220,
+                                            height=30,
+                                            border_width=2)
+        self.entry_product_date.focus()
+        self.entry_product_date.place(x=220,y=480)
+        
+        #Product brand entry
+        label_product_brand = ctk.CTkLabel(self, text="Marca",
+                                       font=font_frame).place(x=640,y=380)
+        self.entry_product_brand = ctk.CTkEntry(self, font=font_frame, 
+                                            width=220,
+                                            height=30,
+                                            border_width=2)
+        self.entry_product_brand.focus()
+        self.entry_product_brand.place(x=770,y=380)
 
-        self.buttonModify = tk.Button(self, text="Modificar", font=font_label, bg="#1C66D6", 
-            fg="white").place(x=50, y=360)
         
-        self.buttonDelte = tk.Button(self, text="Eliminar", font=font_label, bg="#1C66D6", 
-            fg="white").place(x=150, y=360)
+        #Product quantity entry
+        label_product_quantity = ctk.CTkLabel(self, text="Cantidad de producto", 
+                                              font=font_frame).place(x=580,y=430)
         
-        self.buttonClean = tk.Button(self, text="Limpiar\nespacios", font=font_label, bg="#1C66D6", 
-            fg="white").place(x=250, y=350)
+        self.entry_product_quantity = ctk.CTkEntry(self, font=font_frame, 
+                                            width=220,
+                                            height=30,
+                                            border_width=2)
+        self.entry_product_quantity.focus()
+        self.entry_product_quantity.place(x=770,y=430)
+
+        self.buttonDecress = ctk.CTkButton(self, text="-", 
+                                           font=font_frame,
+                                           width=15).place(x=745, y=430)
         
-        self.buttonExit = tk.Button(self, text="Salir", font=font_label, bg="red", 
-            fg="white", command=lambda: controller.show_frame("InventoryManagementMenu")).place(x=350, y=360)
-   
+        self.buttonIncrees = ctk.CTkButton(self, text="+", 
+                                           font=font_frame,
+                                           width=15).place(x=995, y=430)
+
+              
+        #Product price entry
+        label_product_price = ctk.CTkLabel(self, text="Precio por unidad", 
+                                           font=font_frame).place(x=600,y=480)
+        self.entry_product_price = ctk.CTkEntry(self, font=font_frame, 
+                                            width=220,
+                                            height=30,
+                                            border_width=2)
+        self.entry_product_price.focus()
+        self.entry_product_price.place(x=770,y=480)
+        
+        self.buttonModify = ctk.CTkButton(self, text="Modificar", 
+                                          font=font_frame).place(x=150+50, y=550)
+        
+        self.buttonDelte = ctk.CTkButton(self, text="Eliminar",
+                                     font=font_frame).place(x=300+50, y=550)
+        
+        self.buttonClean = ctk.CTkButton(self, text="Limpiar espacios", 
+                                     font=font_frame).place(x=450+50, y=550)
+        
+        self.buttonExit = ctk.CTkButton(self, 
+                                    text="Salir",
+                                    fg_color="#D61C1C",
+                                    hover_color="#9E1818", 
+                                    font=font_frame,
+                                    command=lambda: controller.show_frame("InventoryManagementMenu")).place(x=600+50, y=550)
 
     def clean_entries(self):
         pass
-        #self.entry_product_code.delete(0, tk.END)
-        #self.entry_product_name.delete(0, tk.END)
-        #self.entry_product_brand.delete(0, tk.END)
-        #self.entry_product_date.delete(0, tk.END)
-        #self.entry_product_quantity.delete(0, tk.END)
-        #self.entry_product_price.delete(0, tk.END)
+        self.entry_product_code.delete(0, tk.END)
+        self.entry_product_name.delete(0, tk.END)
+        self.entry_product_brand.delete(0, tk.END)
+        self.entry_product_date.delete(0, tk.END)
+        self.entry_product_quantity.delete(0, tk.END)
+        self.entry_product_price.delete(0, tk.END)
