@@ -61,21 +61,38 @@ class RegistrarVenta(tk.Frame):
         self.entry_product_quantity.focus()
         self.entry_product_quantity.place(x=200,y=190)
 
+        # Search fields
+        label_search_name = ctk.CTkLabel(self, text="Filtro de nombre", 
+                                         font=font_frame).place(x=410, y=40)
+        self.entry_search_name= ctk.CTkEntry(self, font=font_frame, 
+                                             width=400,
+                                            height=30,
+                                            border_width=2,)
+        self.entry_search_name.focus()
+        self.entry_search_name.place(x=530, y=40)
+
+        
+        self.buttonActionSearch = ctk.CTkButton(self, text="Buscar", 
+                                                font=font_frame,
+                                                width=60,
+                                                height=20).place(x=950, y=45)
+        
+
         # Create an instance of Style widget
         style = ttk.Style()
         style.theme_use('clam')
 
         # Add a Treeview widget
-        self.treeSelect = ttk.Treeview(self, column=("c0", "c1"))
+        self.treeSelect = ttk.Treeview(self, column=("c0", "c1"), height=6)
         self.treeSelect.column("# 0", anchor=CENTER)
         self.treeSelect.heading("# 0", text="Codigo")
         self.treeSelect.column("# 1", anchor=CENTER)
         self.treeSelect.heading("# 1", text="Nombre")
         self.treeSelect.column("# 2", anchor=CENTER)
         self.treeSelect.heading("# 2", text="Cantidad")
-        self.treeSelect.place(x=400,y=10)
+        self.treeSelect.place(x=400,y=80)
         vsb = ttk.Scrollbar(self,orient = "vertical",command = self.treeSelect.yview)
-        vsb.place(x=450+200+2+200+2+150, y=10, height=200+30)
+        vsb.place(x=1004, y=80, height=150)
         self.treeSelect.configure(yscrollcommand=vsb.set)
         
         button_Select = ctk.CTkButton(self,
@@ -109,7 +126,7 @@ class RegistrarVenta(tk.Frame):
         vsb = ttk.Scrollbar(self,orient = "vertical",command = self.tree.yview)
         vsb.place(x=905, y=291, height=228)
         self.tree.configure(yscrollcommand=vsb.set)
-        #self.rellenarProductos()
+        self.rellenarProductos()
         
         # Save Button
         button_save = ctk.CTkButton(self,
@@ -215,7 +232,7 @@ class RegistrarVenta(tk.Frame):
             bandera = bd.consultarCodigoFactura(coneccion,codigo)
             if bandera == True: 
                 self.entry_product_codeFactura.insert(0,codigo)
-                self.entry_product_codeFactura.config(state='disabled')
+                self.entry_product_codeFactura.configure(state='disabled')
             
     def clean_entries(self):
         self.entry_product_nameProduct.delete(0, tk.END)

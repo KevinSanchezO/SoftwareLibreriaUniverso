@@ -104,13 +104,6 @@ class MyApp(tk.Tk):
         frame.clean_entries()
         frame.rellenarProductos()
 
-
-
-
-
-
-        
-
 if __name__ == "__main__":
     app = MyApp()
     app.mainloop()
