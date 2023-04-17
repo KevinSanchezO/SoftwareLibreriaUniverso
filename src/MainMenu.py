@@ -44,7 +44,8 @@ class MainMenu(tk.Frame):
         # Add the menu buttons to this frame  Reporte Inventario
         button1 = ctk.CTkButton(self, text="Reporte Inventario", font=font_frame, height=36)
 
-        button2 = ctk.CTkButton(self, text="Reporte Ventas", font=font_frame, height=36)
+        button2 = ctk.CTkButton(self, text="Reporte Ventas", font=font_frame, height=36,
+                                command=lambda: controller.show_frame("SalesReport"))
         
         button3 = ctk.CTkButton(self, text="Registrar Venta", font=font_frame, height=36,
                     command=lambda: controller.show_frameRegistrarVenta("RegistrarVenta"))
