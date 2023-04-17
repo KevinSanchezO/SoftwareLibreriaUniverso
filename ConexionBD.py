@@ -8,10 +8,10 @@ def connect():
     password = '12345sa'
 
     #Server Kevin Sanchez
-    server = 'DESKTOP-KN8EIG1'
-    database = 'LibreriaUniverso'
-    username = 'sa'
-    password = 'abc1234'
+    #server = 'DESKTOP-KN8EIG1'
+    #database = 'LibreriaUniverso'
+    #username = 'sa'
+    #password = 'abc1234'
     conn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
     return conn
 
@@ -55,6 +55,12 @@ def consultaAgregarFactura(conn,codFactura,codProducto,producto,cantidad,precio,
     cursor.execute(consulta,(codFactura,codProducto,producto,cantidad,precio,fecha,total))
     cursor.commit()
 
+def modificarInventario(conn,nombreV,codigoV,nombre,fecha,marca,cantidad,precio):
+    cursor = conn.cursor()
+    consulta = "UPDATE Productos SET Nombre = ? ,[Fecha de Vencimiento] = ? ,Marca = ? ,[Cantidad Inicial] = ? ,[Precio por unidad] = ? WHERE Codigo = ? AND Nombre = ?;" 
+    cursor.execute(consulta,(nombre,fecha,marca,cantidad,precio,codigoV,nombreV))
+    cursor.commit()
+
 def disminuirCantidad(conn,codProducto,producto,cantidad):
     cursor = conn.cursor()
     consulta = "set ANSI_WARNINGS off UPDATE Productos SET [Cantidad Inicial] = [Cantidad Inicial] - ? WHERE Codigo = ? and Nombre = ?;"
@@ -89,6 +95,18 @@ def consultaProducts(conn):
         
     except Exception as e:
         print("Ocurrió un error al consultar con where: ", e)
+
+def consultaProductsModifyInventory(conn,name,codigo):
+    try:
+            cursor = conn.cursor()
+            consulta = "SET NOCOUNT ON SELECT Nombre,Codigo,[Fecha de Vencimiento],Marca,[Cantidad Inicial],[Precio por unidad] FROM Productos WHERE Codigo = ? AND Nombre = ?;"
+            cursor.execute(consulta,(name,codigo))
+            Resultado = cursor.fetchall()
+            return Resultado
+        
+    except Exception as e:
+        print("Ocurrió un error al consultar con where: ", e)
+        
 
 def consultaRegistrarProducto(conn,name,date,marca,quantity,price):
     try:
