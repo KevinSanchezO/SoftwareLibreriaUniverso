@@ -42,7 +42,8 @@ class MainMenu(tk.Frame):
         lblImagen=Label(self,image=imagenMantenimientoInventario,bg="#252525").place(x=820,y=190)
 
         # Add the menu buttons to this frame  Reporte Inventario
-        button1 = ctk.CTkButton(self, text="Reporte Inventario", font=font_frame, height=36)
+        button1 = ctk.CTkButton(self, text="Reporte Inventario", font=font_frame, height=36,
+                                command=lambda: controller.show_frame("InventoryReport"))
 
         button2 = ctk.CTkButton(self, text="Reporte Ventas", font=font_frame, height=36,
                                 command=lambda: controller.show_frame("SalesReport"))

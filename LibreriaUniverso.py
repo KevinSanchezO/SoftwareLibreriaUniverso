@@ -17,6 +17,7 @@ from src.RegisterNewProduct import RegisterNewProduct
 from src.RegistrarVenta import RegistrarVenta
 from src.ModifyInventory import ModifyInventory
 from src.SalesReport import SalesReport
+from src.InventoryReport import InventoryReport
 
 # Supported modes : Light, Dark, System
 ctk.set_appearance_mode("System")
@@ -61,7 +62,8 @@ class MyApp(tk.Tk):
             "RegisterNewProduct": RegisterNewProduct,
             "RegistrarVenta": RegistrarVenta,
             "ModifyInventory": ModifyInventory,
-            "SalesReport": SalesReport
+            "SalesReport": SalesReport,
+            "InventoryReport": InventoryReport
         }
         
         for name, F in self.frames.items():
@@ -70,7 +72,7 @@ class MyApp(tk.Tk):
             frame.grid(row=1, column=0, sticky="nsew")
 
         # Show the first frame
-        self.show_frame("SalesReport")
+        self.show_frame("LogIn")
 
     def verificationRegisterProduct(self,name,date,marca,quantity,price):
         if name.get() == "" or date.get()=="" or marca.get()=="" or quantity.get()=="" or price.get()=="":

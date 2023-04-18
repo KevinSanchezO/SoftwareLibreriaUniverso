@@ -3,8 +3,6 @@ from tkinter import ttk
 import customtkinter as ctk
 from tkinter import messagebox as MessageBox
 import ConexionBD as bd
-import string
-import random
 import tkinter.font as font
 from tkinter import *
 
@@ -50,7 +48,7 @@ class SalesReport(tk.Frame):
         self.entry_end_date.focus()
         self.entry_end_date.place(x=360+120,y=110)
 
-        button_search = ctk.CTkButton(self, text="Buscar",
+        button_search = ctk.CTkButton(self, text="Generar reporte",
                                       font=font_frame,
                                       width=60,
                                       height=20).place(x=720,y=112)
@@ -75,7 +73,35 @@ class SalesReport(tk.Frame):
         vsb.place(x=1012, y=170, height=150)
         self.tree.configure(yscrollcommand=vsb.set)
 
-        
+
+        #report total entry
+        label_end_date = ctk.CTkLabel(self, text="Total de periodo de ventas", 
+                                   font=font_frame).place(x=630,y=350)
+
+        self.entry_total_sale = ctk.CTkEntry(self, width=190,
+                                             height=30,
+                                             border_width=2)
+        self.entry_total_sale.focus()
+        self.entry_total_sale.place(x=830,y=350)
+
+        # Generate PDF Button
+        button_pdf = ctk.CTkButton(self,
+                                  text="Generar PDF",
+                                  font=font_frame,
+                                  height=50,
+                                  width=150)
+        button_pdf.place(x=750, y=430)
+
+        # Exit Button
+        button_volver = ctk.CTkButton(self,
+                                  text="Volver",
+                                  font=font_frame,
+                                  fg_color="#D61C1C",
+                                  hover_color="#9E1818",
+                                  height=50,
+                                  width=150, 
+                                  command=lambda:controller.show_frame("MainMenu"))
+        button_volver.place(x=750, y=530)
 
     def clean_entries(self):
         pass
