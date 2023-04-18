@@ -29,15 +29,6 @@ class RegisterNewProduct(tk.Frame):
         self.entry_product_name.focus()
         self.entry_product_name.place(x=240+40,y=120+40)
 
-        # Date Entry
-        label_product_date = ctk.CTkLabel(self, text="Fecha de Vencimiento", 
-                                      font=font_frame).place(x=30+40, y=170+40)
-        self.entry_product_date = ctk.CTkEntry(self, width=500,
-                               height=30,
-                               border_width=2, font=font_frame)
-        self.entry_product_date.focus()
-        self.entry_product_date.place(x=240+40,y=170+40)
-
         # Marca Entry
         label_product_marca = ctk.CTkLabel(self, text="Marca", 
                                            font=font_frame).place(x=80+40,y=220+40)
@@ -70,7 +61,7 @@ class RegisterNewProduct(tk.Frame):
                                     width=180,
                                     height=40,
             command=lambda:controller.verificationRegisterProduct(self.entry_product_name,
-                            self.entry_product_date,self.entry_product_marca,
+                            self.entry_product_marca,
                             self.entry_initial_quantity,self.entry_initial_price))
         button_save.place(x=220,y=440)
 
@@ -101,6 +92,5 @@ class RegisterNewProduct(tk.Frame):
         self.entry_product_name.delete(0, tk.END)
         self.entry_initial_price.delete(0, tk.END)
         self.entry_initial_quantity.delete(0, tk.END)
-        self.entry_product_date.delete(0, tk.END)
         self.entry_product_marca.delete(0, tk.END)
         pass

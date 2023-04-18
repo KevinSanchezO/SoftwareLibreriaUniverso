@@ -78,16 +78,6 @@ class ModifyInventory(tk.Frame):
         self.entry_product_name.focus()
         self.entry_product_name.place(x=220,y=430)
         
-        #Product date entry
-        label_product_date = ctk.CTkLabel(self, text="Fecha de vencimiento", 
-                                          font=font_frame).place(x=60,y=480)
-        self.entry_product_date = ctk.CTkEntry(self, font=font_frame, 
-                                            width=220,
-                                            height=30,
-                                            border_width=2)
-        self.entry_product_date.focus()
-        self.entry_product_date.place(x=220,y=480)
-        
         #Product brand entry
         label_product_brand = ctk.CTkLabel(self, text="Marca",
                                        font=font_frame).place(x=640,y=380)
@@ -107,16 +97,21 @@ class ModifyInventory(tk.Frame):
                                             width=220,
                                             height=30,
                                             border_width=2)
+
         self.entry_product_quantity.focus()
         self.entry_product_quantity.place(x=770,y=430)
+        
+        
 
         self.buttonDecress = ctk.CTkButton(self, text="-", 
                                            font=font_frame,
-                                           width=15).place(x=745, y=430)
+                                           width=15,
+                                           command = self.decress).place(x=745, y=430)
         
         self.buttonIncrees = ctk.CTkButton(self, text="+", 
                                            font=font_frame,
-                                           width=15).place(x=995, y=430)
+                                           width=15,
+                                           command = self.incress).place(x=995, y=430)
 
               
         #Product price entry
@@ -134,7 +129,8 @@ class ModifyInventory(tk.Frame):
                                           command = self.modificar).place(x=150+50, y=550)
         
         self.buttonDelte = ctk.CTkButton(self, text="Eliminar",
-                                     font=font_frame).place(x=300+50, y=550)
+                                     font=font_frame,
+                                     command = self.eliminar).place(x=300+50, y=550)
         
         self.buttonClean = ctk.CTkButton(self, text="Limpiar espacios", 
                                      font=font_frame,command = self.clean_entries).place(x=450+50, y=550)
@@ -159,10 +155,9 @@ class ModifyInventory(tk.Frame):
             for row in productos:
                 self.entry_product_code.insert(0,row[1])
                 self.entry_product_name.insert(0,row[0])
-                self.entry_product_date.insert(0, row[2])
-                self.entry_product_brand.insert(0, row[3])
-                self.entry_product_quantity.insert(0, row[4])
-                self.entry_product_price.insert(0, row[5])
+                self.entry_product_brand.insert(0, row[2])
+                self.entry_product_quantity.insert(0, row[3])
+                self.entry_product_price.insert(0, row[4])
             self.entry_product_code.configure(state='disabled')
             self.codigoV = self.entry_product_code.get()
             self.nombreV = self.entry_product_name.get()
@@ -174,7 +169,6 @@ class ModifyInventory(tk.Frame):
         self.entry_product_code.delete(0, tk.END)
         self.entry_product_name.delete(0, tk.END)
         self.entry_product_brand.delete(0, tk.END)
-        self.entry_product_date.delete(0, tk.END)
         self.entry_product_quantity.delete(0, tk.END)
         self.entry_product_price.delete(0, tk.END)
 
@@ -200,16 +194,39 @@ class ModifyInventory(tk.Frame):
         try:
             codigo = self.entry_product_code.get()
             nombre = self.entry_product_name.get()
-            fecha = self.entry_product_date.get()
             marca = self.entry_product_brand.get()
             cantidad = self.entry_product_quantity.get()
             precio = self.entry_product_price.get()
             coneccion = bd.connect()
-            productos = bd.modificarInventario(coneccion,self.nombreV,self.codigoV,nombre,fecha,marca,cantidad,precio)
+            productos = bd.modificarInventario(coneccion,self.nombreV,self.codigoV,nombre,marca,cantidad,precio)
             MessageBox.showinfo("Aviso!", "Se modifico el producto satisfactoriamente")
             self.reset()
             self.clean_entries()
             self.rellenarProductos()
-    
         except IndexError as e:
             MessageBox.showinfo("Error!", "No se encontro el elemento a modificar")
+
+    def eliminar(self):
+        try:
+            codigo = self.entry_product_code.get()
+            nombre = self.entry_product_name.get()
+            coneccion = bd.connect()
+            productos = bd.eliminarProducto(coneccion,codigo,nombre)
+            MessageBox.showinfo("Aviso!", "Se elimino el producto satisfactoriamente")
+            self.reset()
+            self.clean_entries()
+            self.rellenarProductos()
+        except IndexError as e:
+            MessageBox.showinfo("Error!", "No se encontro el elemento a eliminar")
+
+    def decress(self):
+        cantidad = int(self.entry_product_quantity.get())
+        cantidad = cantidad -1
+        self.entry_product_quantity.delete(0,tk.END)
+        self.entry_product_quantity.insert(0,cantidad)
+
+    def incress(self):
+        cantidad = int(self.entry_product_quantity.get())
+        cantidad = cantidad +1
+        self.entry_product_quantity.delete(0,tk.END)
+        self.entry_product_quantity.insert(0,cantidad)

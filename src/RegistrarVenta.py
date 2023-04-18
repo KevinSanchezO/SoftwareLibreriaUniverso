@@ -3,6 +3,7 @@ from tkinter import ttk
 import customtkinter as ctk
 from tkinter import messagebox as MessageBox
 import ConexionBD as bd
+from datetime import datetime
 import string
 import random
 import tkinter.font as font
@@ -164,7 +165,7 @@ class RegistrarVenta(tk.Frame):
     def RealizarPago(self):
         for child in self.tree.get_children():
             coneccion = bd.connect()
-            bandera = bd.consultaAgregarFactura(coneccion,self.entry_product_codeFactura.get(),self.tree.item(child)["text"],self.tree.item(child)["values"][0],self.tree.item(child)["values"][1],self.tree.item(child)["values"][2],"0",self.entry_product_Total.get())
+            bandera = bd.consultaAgregarFactura(coneccion,self.entry_product_codeFactura.get(),self.tree.item(child)["text"],self.tree.item(child)["values"][0],self.tree.item(child)["values"][1],self.tree.item(child)["values"][2],datetime.today().strftime('%m-%d-%Y'),self.entry_product_Total.get())
             bd.disminuirCantidad(coneccion,self.tree.item(child)["text"],self.tree.item(child)["values"][0],self.tree.item(child)["values"][1])
         self.rellenarProductos()
         

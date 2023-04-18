@@ -74,12 +74,12 @@ class MyApp(tk.Tk):
         # Show the first frame
         self.show_frame("LogIn")
 
-    def verificationRegisterProduct(self,name,date,marca,quantity,price):
-        if name.get() == "" or date.get()=="" or marca.get()=="" or quantity.get()=="" or price.get()=="":
+    def verificationRegisterProduct(self,name,marca,quantity,price):
+        if name.get() == "" or marca.get()=="" or quantity.get()=="" or price.get()=="":
             MessageBox.showinfo("Error!", "Por favor ingrese los datos que se le solicitan")
         else:
             coneccion = bd.connect()
-            bandera = bd.consultaRegistrarProducto(coneccion,name.get(),date.get(),marca.get(),quantity.get(),price.get())
+            bandera = bd.consultaRegistrarProducto(coneccion,name.get(), marca.get(),quantity.get(),price.get())
             MessageBox.showinfo("Aviso!", "Producto ingresado correctamente")
             
 

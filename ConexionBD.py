@@ -2,17 +2,16 @@ import pyodbc
 
 def connect():
     #Server Kevin Lanzas
-    '''server = 'LAPTOP-N9RBF9JA\KEVIN1'
+    server = 'LAPTOP-N9RBF9JA\KEVIN1'
     database = 'LibreriaUniverso'
     username = 'sa'
     password = '12345sa'
-    '''
-    
+
     #Server Kevin Sanchez
-    server = 'DESKTOP-KN8EIG1'
-    database = 'LibreriaUniverso'
-    username = 'sa'
-    password = 'abc1234'
+    #server = 'DESKTOP-KN8EIG1'
+    #database = 'LibreriaUniverso'
+    #username = 'sa'
+    #password = 'abc1234'
     conn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
     return conn
 
@@ -56,10 +55,16 @@ def consultaAgregarFactura(conn,codFactura,codProducto,producto,cantidad,precio,
     cursor.execute(consulta,(codFactura,codProducto,producto,cantidad,precio,fecha,total))
     cursor.commit()
 
-def modificarInventario(conn,nombreV,codigoV,nombre,fecha,marca,cantidad,precio):
+def modificarInventario(conn,nombreV,codigoV,nombre,marca,cantidad,precio):
     cursor = conn.cursor()
-    consulta = "UPDATE Productos SET Nombre = ? ,[Fecha de Vencimiento] = ? ,Marca = ? ,[Cantidad Inicial] = ? ,[Precio por unidad] = ? WHERE Codigo = ? AND Nombre = ?;" 
-    cursor.execute(consulta,(nombre,fecha,marca,cantidad,precio,codigoV,nombreV))
+    consulta = "UPDATE Productos SET Nombre = ? ,Marca = ? ,[Cantidad Inicial] = ? ,[Precio por unidad] = ? WHERE Codigo = ? AND Nombre = ?;" 
+    cursor.execute(consulta,(nombre,marca,cantidad,precio,codigoV,nombreV))
+    cursor.commit()
+    
+def eliminarProducto(conn,codigo,nombre):
+    cursor = conn.cursor()
+    consulta = "DELETE FROM Productos WHERE Codigo = ? AND Nombre = ?;" 
+    cursor.execute(consulta,(codigo,nombre))
     cursor.commit()
 
 def disminuirCantidad(conn,codProducto,producto,cantidad):
@@ -100,7 +105,7 @@ def consultaProducts(conn):
 def consultaProductsModifyInventory(conn,name,codigo):
     try:
             cursor = conn.cursor()
-            consulta = "SET NOCOUNT ON SELECT Nombre,Codigo,[Fecha de Vencimiento],Marca,[Cantidad Inicial],[Precio por unidad] FROM Productos WHERE Codigo = ? AND Nombre = ?;"
+            consulta = "SET NOCOUNT ON SELECT Nombre,Codigo,Marca,[Cantidad Inicial],[Precio por unidad] FROM Productos WHERE Codigo = ? AND Nombre = ?;"
             cursor.execute(consulta,(name,codigo))
             Resultado = cursor.fetchall()
             return Resultado
@@ -109,16 +114,15 @@ def consultaProductsModifyInventory(conn,name,codigo):
         print("Ocurrió un error al consultar con where: ", e)
         
 
-def consultaRegistrarProducto(conn,name,date,marca,quantity,price):
+def consultaRegistrarProducto(conn,name,marca,quantity,price):
     try:
             cursor = conn.cursor()
-            consulta = "set ANSI_WARNINGS off INSERT INTO Productos(Nombre,[Fecha de Vencimiento],Marca,[Cantidad Inicial],[Precio por unidad])VALUES(?,?,?,?,?);"
+            consulta = "set ANSI_WARNINGS off INSERT INTO Productos(Nombre,Marca,[Cantidad Inicial],[Precio por unidad])VALUES(?,?,?,?);"
             nombre = name
-            fecha = date
             marc = marca
             cantidad = quantity
             precio = price
-            cursor.execute(consulta,(nombre,fecha,marc,cantidad,precio))
+            cursor.execute(consulta,(nombre,marc,cantidad,precio))
             cursor.commit()
                 
     except Exception as e:
