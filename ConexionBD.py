@@ -39,6 +39,23 @@ def consultaLogin(conn,user,contrasenia):
     except Exception as e:
         print("Ocurrió un error al consultar con where: ", e)
 
+def consultarFechas(conn,fechaInicio,fechaFinal):
+    try:
+            cursor = conn.cursor()
+            consulta = "SELECT [Codigo de Factura],Fecha,[Nombre del Producto],[Precio por Unidad],[Cantidad a Comprar] FROM Facturas WHERE fecha  BETWEEN ? AND ? ORDER BY [Codigo de Factura];"
+            cursor.execute(consulta, (fechaInicio,fechaFinal))
+
+            # Con fetchall traemos todas las filas
+            
+            Resultado = cursor.fetchall()
+            if len(Resultado)<1:
+                return "Nada"
+            else:
+                return Resultado
+                
+    except Exception as e:
+        print("Ocurrió un error al consultar con where: ", e)
+
 def consultarCodigoFactura(conn,codigo):
     cursor = conn.cursor()
     consulta = "SET NOCOUNT ON SELECT * FROM Facturas WHERE [Codigo de Factura] = ?;"

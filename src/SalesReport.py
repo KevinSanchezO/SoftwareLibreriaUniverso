@@ -36,6 +36,7 @@ class SalesReport(tk.Frame):
         self.entry_start_date = ctk.CTkEntry(self, width=190,
                                              height=30,
                                              border_width=2)
+        self.entry_start_date.insert(0,"Formato de fecha: año/mes/dia")
         self.entry_start_date.focus()
         self.entry_start_date.place(x=150,y=110)
 
@@ -45,13 +46,16 @@ class SalesReport(tk.Frame):
         self.entry_end_date = ctk.CTkEntry(self, width=190,
                                              height=30,
                                              border_width=2)
+        
+        self.entry_end_date.insert(0,"Formato de fecha: año/mes/dia")
         self.entry_end_date.focus()
         self.entry_end_date.place(x=360+120,y=110)
 
         button_search = ctk.CTkButton(self, text="Generar reporte",
                                       font=font_frame,
                                       width=60,
-                                      height=20).place(x=720,y=112)
+                                      height=20,
+                                      command = self.generarReporte).place(x=720,y=112)
         
         #tree view information
         style = ttk.Style()
@@ -102,6 +106,30 @@ class SalesReport(tk.Frame):
                                   width=150, 
                                   command=lambda:controller.show_frame("MainMenu"))
         button_volver.place(x=750, y=530)
+        self.totalGanado = 0;
+
+    def generarReporte(self):
+        if self.entry_start_date.get() == "" or self.entry_end_date.get()=="":
+            MessageBox.showinfo("Error!", "Por favor ingrese las fechas indicadas")
+        else:
+            fechaInicio = self.entry_start_date.get()
+            fechaFinal = self.entry_end_date.get()
+            coneccion = bd.connect()
+            bandera = bd.consultarFechas(coneccion,fechaInicio,fechaFinal)
+            if bandera != "Nada":
+                for row in bandera:
+                    cantidad = int(row[4])
+                    precio = int(row[3])
+                    total = precio * cantidad
+                    self.totalGanado = self.totalGanado + total
+                    self.tree.insert('', 0 , text= row[0],values = (row[1],row[2],row[3],total))
+                self.entry_total_sale.insert(0,self.totalGanado)
+            else:
+                MessageBox.showinfo("Error!", "La fecha ingresada es incorrecta")
+            
+
+            
+
 
     def clean_entries(self):
         pass
