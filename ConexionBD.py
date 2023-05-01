@@ -56,6 +56,34 @@ def consultarFechas(conn,fechaInicio,fechaFinal):
     except Exception as e:
         print("Ocurrió un error al consultar con where: ", e)
 
+def consultaFechaPeriodo(conn,dias,esMes):
+    try:
+        if esMes == False:
+            cursor = conn.cursor()
+            consulta = "SELECT [Codigo de Factura],Fecha,[Nombre del Producto],[Precio por Unidad],[Cantidad a Comprar] FROM Facturas WHERE [Fecha] >= dateadd (dd, -?, getdate());"
+            cursor.execute(consulta, (dias))
+            # Con fetchall traemos todas las filas
+            Resultado = cursor.fetchall()
+            if len(Resultado)<1:
+                return "Nada"
+            else:
+                return Resultado
+        else:
+            cursor = conn.cursor()
+            consulta = "SELECT [Codigo de Factura],Fecha,[Nombre del Producto],[Precio por Unidad],[Cantidad a Comprar] FROM Facturas WHERE [Fecha] >= dateadd (mm, -?, getdate());"
+            cursor.execute(consulta, (dias))
+            # Con fetchall traemos todas las filas
+            Resultado = cursor.fetchall()
+            if len(Resultado)<1:
+                return "Nada"
+            else:
+                return Resultado
+            
+    except Exception as e:
+        print("Ocurrió un error al consultar con where: ", e)
+    
+    
+
 def consultarCodigoFactura(conn,codigo):
     cursor = conn.cursor()
     consulta = "SET NOCOUNT ON SELECT * FROM Facturas WHERE [Codigo de Factura] = ?;"

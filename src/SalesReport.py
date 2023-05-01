@@ -109,27 +109,67 @@ class SalesReport(tk.Frame):
         self.totalGanado = 0;
 
     def generarReporte(self):
-        if self.entry_start_date.get() == "" or self.entry_end_date.get()=="":
-            MessageBox.showinfo("Error!", "Por favor ingrese las fechas indicadas")
+        if self.period_time.get() == "Ultima semana":
+            self.mostrarPeriodo(8,False)
         else:
-            fechaInicio = self.entry_start_date.get()
-            fechaFinal = self.entry_end_date.get()
-            coneccion = bd.connect()
-            bandera = bd.consultarFechas(coneccion,fechaInicio,fechaFinal)
-            if bandera != "Nada":
-                for row in bandera:
-                    cantidad = int(row[4])
-                    precio = int(row[3])
-                    total = precio * cantidad
-                    self.totalGanado = self.totalGanado + total
-                    self.tree.insert('', 0 , text= row[0],values = (row[1],row[2],row[3],total))
-                self.entry_total_sale.insert(0,self.totalGanado)
+            if self.period_time.get() == "Ultimas dos semanas":
+                self.mostrarPeriodo(15,False)
             else:
-                MessageBox.showinfo("Error!", "La fecha ingresada es incorrecta")
+                if self.period_time.get() == "Ultimo mes":
+                    self.mostrarPeriodo(1,True)
+                else:
+                    if self.period_time.get() == "Ultimos dos meses":
+                        self.mostrarPeriodo(2,True)
+                    else:
+                        if self.period_time.get() == "Ultimos tres meses":
+                            self.mostrarPeriodo(3,True)
+                        else:
+                            if self.period_time.get() == "Ultimos seis meses":
+                                self.mostrarPeriodo(6,True)
+                            else:    
+                                if self.entry_start_date.get() == "" or self.entry_end_date.get()=="":
+                                    MessageBox.showinfo("Error!", "Por favor ingrese las fechas indicadas")
+                                else:
+                                    fechaInicio = self.entry_start_date.get()
+                                    fechaFinal = self.entry_end_date.get()
+                                    coneccion = bd.connect()
+                                    bandera = bd.consultarFechas(coneccion,fechaInicio,fechaFinal)
+                                    if bandera != "Nada":
+                                        records = self.tree.get_children()
+                                        for element in records:
+                                            self.tree.delete(element)
+                                        for row in bandera:
+                                            cantidad = int(row[4])
+                                            precio = int(row[3])
+                                            total = precio * cantidad
+                                            self.totalGanado = self.totalGanado + total
+                                            self.tree.insert('', 0 , text= row[0],values = (row[1],row[2],row[3],total))
+                                        self.entry_total_sale.insert(0,self.totalGanado)
+                                    else:
+                                        MessageBox.showinfo("Error!", "La fecha ingresada es incorrecta")
+
+    def mostrarPeriodo(self,dias,esMes):
+        self.clean_entries()
+        coneccion = bd.connect()
+        bandera = bd.consultaFechaPeriodo(coneccion,dias,esMes)
+        if bandera != "Nada":
+            records = self.tree.get_children()
+            for element in records:
+                self.tree.delete(element)
+            for row in bandera:
+                cantidad = int(row[4])
+                precio = int(row[3])
+                total = precio * cantidad
+                self.totalGanado = self.totalGanado + total
+                self.tree.insert('', 0 , text= row[0],values = (row[1],row[2],row[3],total))
+            self.entry_total_sale.insert(0,self.totalGanado)
+        else:
+           MessageBox.showinfo("Error!", "La fecha ingresada es incorrecta") 
             
-
-            
-
-
     def clean_entries(self):
-        pass
+        self.entry_start_date.delete(0, tk.END)
+        self.entry_end_date.delete(0, tk.END)
+        self.entry_total_sale.delete(0, tk.END)
+        self.totalGanado = 0
+        
+        
