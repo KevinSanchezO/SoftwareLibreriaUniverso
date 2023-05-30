@@ -2,16 +2,18 @@ import pyodbc
 
 def connect():
     #Server Kevin Lanzas
+    '''
     server = 'LAPTOP-N9RBF9JA\KEVIN1'
     database = 'LibreriaUniverso'
     username = 'sa'
     password = '12345sa'
+    '''
 
     #Server Kevin Sanchez
-    #server = 'DESKTOP-KN8EIG1'
-    #database = 'LibreriaUniverso'
-    #username = 'sa'
-    #password = 'abc1234'
+    server = 'DESKTOP-KN8EIG1'
+    database = 'LibreriaUniverso'
+    username = 'sa'
+    password = 'abc1234'
     conn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
     return conn
 
@@ -173,7 +175,18 @@ def consultaRegistrarProducto(conn,name,marca,quantity,price):
     except Exception as e:
         print("Ocurrió un error al insertar: ", e)
 
-            
+def consultar_productos_stock(conn, cantidad_minima):
+    try:
+            cursor = conn.cursor()
+            consulta = f"SET NOCOUNT ON SELECT Codigo, Nombre, Marca, [Cantidad Inicial] FROM Productos WHERE [Cantidad Inicial] <= ?;"
+            cursor.execute(consulta,(cantidad_minima))
+            Resultado = cursor.fetchall()
+            return Resultado
+        
+    except Exception as e:
+        print("Ocurrió un error al consultar con where: ", e)
+
+        
 # Cierre de conexión
 def close():
     conn.close()
