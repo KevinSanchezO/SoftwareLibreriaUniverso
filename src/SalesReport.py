@@ -175,7 +175,7 @@ class SalesReport(tk.Frame):
     def obtener_datos(self):
         datos = [['Codigo de Factura', 'Fecha', 'Producto', 'Precio por unidad', 'Precio total de compra']]
         for item in self.tree.get_children():
-            text = self.tree.item(item)["text"]
+            text = self.tree.item(item)["text"].strip()
             values = self.tree.item(item)["values"]
             cleaned_values = [text] + [value.strip() if isinstance(value, str) else value for value in values]
             datos.append(cleaned_values)
