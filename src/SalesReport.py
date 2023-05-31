@@ -5,6 +5,11 @@ from tkinter import messagebox as MessageBox
 import ConexionBD as bd
 import tkinter.font as font
 from tkinter import *
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table
+from reportlab.lib import colors
+from datetime import datetime
+
 
 class SalesReport(tk.Frame):
     def __init__(self, parent, controller):
@@ -93,7 +98,8 @@ class SalesReport(tk.Frame):
                                   text="Generar PDF",
                                   font=font_frame,
                                   height=50,
-                                  width=150)
+                                  width=150,
+                                  command=self.generate_pdf)
         button_pdf.place(x=750, y=430)
 
         # Exit Button
@@ -165,6 +171,45 @@ class SalesReport(tk.Frame):
             self.entry_total_sale.insert(0,self.totalGanado)
         else:
            MessageBox.showinfo("Error!", "La fecha ingresada es incorrecta") 
+
+    def obtener_datos(self):
+        datos = [['Codigo de Factura', 'Fecha', 'Producto', 'Precio por unidad', 'Precio total de compra']]
+        for item in self.tree.get_children():
+            text = self.tree.item(item)["text"]
+            values = self.tree.item(item)["values"]
+            cleaned_values = [text] + [value.strip() if isinstance(value, str) else value for value in values]
+            datos.append(cleaned_values)
+        print(datos)
+        return datos
+    
+    def generate_pdf(self):
+        # Obtener los datos del Treeview
+        datos = self.obtener_datos()
+
+        fecha_actual = datetime.now().strftime("%Y-%m-%d")
+        name_doc = 'ReporteVentas_{}.pdf'.format(fecha_actual)
+
+        # Crear el documento PDF
+        doc = SimpleDocTemplate(name_doc, pagesize=letter)
+
+        # Crear la tabla con los datos
+        table = Table(datos)
+
+        table.setStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
+            ("FONTSIZE", (0, 0), (-1, 0), 14),
+            ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+            ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+            ("GRID", (0, 0), (-1, -1), 1, colors.black)
+        ])
+
+        # Agregar la tabla al documento
+        elements = [table]
+        doc.build(elements)
             
     def clean_entries(self):
         self.entry_start_date.delete(0, tk.END)

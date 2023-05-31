@@ -2,18 +2,19 @@ import pyodbc
 
 def connect():
     #Server Kevin Lanzas
-    '''
     server = 'LAPTOP-N9RBF9JA\KEVIN1'
     database = 'LibreriaUniverso'
     username = 'sa'
     password = '12345sa'
-    '''
+    
 
     #Server Kevin Sanchez
+    '''
     server = 'DESKTOP-KN8EIG1'
     database = 'LibreriaUniverso'
     username = 'sa'
     password = 'abc1234'
+    '''
     conn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
     return conn
 

@@ -5,6 +5,10 @@ from tkinter import messagebox as MessageBox
 import ConexionBD as bd
 import tkinter.font as font
 from tkinter import *
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table
+from reportlab.lib import colors
+from datetime import datetime
 
 class InventoryReport(tk.Frame):
     def __init__(self, parent, controller):
@@ -65,7 +69,8 @@ class InventoryReport(tk.Frame):
                                   text="Generar PDF",
                                   font=font_frame,
                                   height=40,
-                                  width=150)
+                                  width=150,
+                                  command=self.generate_pdf)
         button_pdf.place(x=200, y=540)
 
         # Exit Button
@@ -101,8 +106,48 @@ class InventoryReport(tk.Frame):
         for element in records:
             self.tree.delete(element)
         for row in bandera:
-                self.tree.insert('', 0 , text= row[0],values = (row[1],row[2],row[3]))
+            self.tree.insert('', 0 , text= row[0],values = (row[1],row[2],row[3]))
 
+
+    def obtener_datos(self):
+        datos = [['Identificador', 'Nombre del producto', 'Marca', 'Cantidad en Stock']]
+        for item in self.tree.get_children():
+            text = self.tree.item(item)["text"]
+            values = self.tree.item(item)["values"]
+            cleaned_values = [text] + [value.strip() if isinstance(value, str) else value for value in values]
+            datos.append(cleaned_values)
+        print(datos)
+        return datos
+
+
+    def generate_pdf(self):
+        # Obtener los datos del Treeview
+        datos = self.obtener_datos()
+
+        fecha_actual = datetime.now().strftime("%Y-%m-%d")
+        name_doc = 'ReporteInvetario_{}.pdf'.format(fecha_actual)
+
+        # Crear el documento PDF
+        doc = SimpleDocTemplate(name_doc, pagesize=letter)
+
+        # Crear la tabla con los datos
+        table = Table(datos)
+
+        table.setStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
+            ("FONTSIZE", (0, 0), (-1, 0), 14),
+            ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+            ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+            ("GRID", (0, 0), (-1, -1), 1, colors.black)
+        ])
+
+        # Agregar la tabla al documento
+        elements = [table]
+        doc.build(elements)
 
     def clean_entries(self):
         pass
